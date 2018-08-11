@@ -1,0 +1,1284 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:mso="urn:schemas-microsoft-com:office:office" xmlns:msdt="uuid:C2F41010-65B3-11d1-A29F-00AA00C14882">
+
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>Official Representation Funds Request - New Request</title>
+    
+    <link rel="stylesheet" type="text/css" href="http://irm.m.state.sbu/sites/bmp/SPO/FMD/AMS/web/html/ORF/css/page_loader.css" />
+    <link rel="stylesheet" type="text/css" href="http://irm.m.state.sbu/sites/bmp/SPO/FMD/AMS/web/html/ORF/css/orf_css.css" />
+    <link rel="stylesheet" type="text/css" href="http://irm.m.state.sbu/sites/bmp/SPO/FMD/AMS/web/html/ORF/css/jquery-ui.css" media="screen, projection" />
+    <link rel="stylesheet" type="text/css" href="http://irm.m.state.sbu/sites/bmp/SPO/FMD/AMS/web/dependencies/jquery-timepicker/lib/bootstrap-datepicker.css" />
+    <link rel="stylesheet" type="text/css" href="http://irm.m.state.sbu/sites/bmp/SPO/FMD/AMS/web/dependencies/jquery-timepicker/lib/jquery.timepicker.css" />
+    <link rel="stylesheet" href="http://irm.m.state.sbu/sites/bmp/SPO/FMD/AMS/web/html/ORF/css/wait_loader.css"/>
+        
+    <script type="text/javascript" src="http://irm.m.state.sbu/sites/bmp/SPO/FMD/AMS/web/js/jquery.min.js"></script>
+    <script type="text/javascript" src="http://irm.m.state.sbu/sites/bmp/SPO/FMD/AMS/web/js/jquery-ui.min.js"></script>
+    <script type="text/javascript" src="http://irm.m.state.sbu/sites/bmp/SPO/FMD/AMS/web/js/SPServices/jquery.SPServices.min.js"></script>
+	<script type="text/javascript" src="http://irm.m.state.sbu/sites/bmp/SPO/FMD/AMS/web/dependencies/jquery-timepicker/jquery.timepicker.min.js"></script>
+	<script type="text/javascript" src="http://irm.m.state.sbu/sites/bmp/SPO/FMD/AMS/web/dependencies/jquery-timepicker/lib/bootstrap-datepicker.js"></script>
+	<script type="text/javascript" src="http://irm.m.state.sbu/sites/bmp/SPO/FMD/AMS/web/js/UserViewInfo.js"></script>
+
+    <!--[if IE]>
+    	<script type="text/javascript" src="http://irm.m.state.sbu/sites/bmp/SPO/FMD/AMS/web/dependencies/indexOf_Polyfill.js"></script>
+    	<script type="text/javascript" src="http://irm.m.state.sbu/sites/bmp/SPO/FMD/AMS/web/dependencies/toISOString_Polyfill.js"></script>
+    	<script type="text/javascript" src="http://irm.m.state.sbu/sites/bmp/SPO/FMD/AMS/web/dependencies/gEBCN_Polyfill.js"></script>
+	<![endif]-->
+
+    <script type="text/javascript">
+    	/**
+    	 * This function checks to see if the current browser is IE
+    	 * @public
+    	 * @returns {boolean}
+		 */	
+        var isIE = (function() {
+            var ua = window.navigator.userAgent;
+            var msie = ua.indexOf("MSIE");
+            return (msie > 0);
+        })();
+
+		/**
+		 * This function binds functions to the HTML elements
+		 * @public		
+		 */
+    	function bindElements() {  
+    		return $.Deferred(function(dfd) {
+				/** Placeholder HTML polyfill **/
+				$('[placeholder]').focus(function() {
+				    var input = $(this);
+				    if (input.val() == input.attr('placeholder')) {
+				        input.val('');
+				        input.removeClass('placeholder');
+				    }
+				}).blur(function() {
+				    var input = $(this);
+				    if (input.val() == '' || input.val() == input.attr('placeholder')) {
+				        input.addClass('placeholder');
+				        input.val(input.attr('placeholder'));
+				    }
+				}).blur();
+				$('[placeholder]').parents('form').submit(function() {
+				    $(this).find('[placeholder]').each(function() {
+				        var input = $(this);
+				        if (input.val() == input.attr('placeholder')) {
+				            input.val('');
+				        }
+				    })
+				});
+				$('#totalRqstAmt').bind('change', function(){
+					var $self = $(this);
+					var val = $self.val();
+					var id = $self.attr('id');
+					validateMoney(val, id);
+				});
+		        $('#btnAddFile').bind('click', function() {
+		            if (!isIE) {
+		                addExpFile();
+		            } else {
+		            	alert("Please Switch to Chrome to Upload Files...");
+		            }
+		        });
+		        $('#btnGuestFile').bind('click', function() {
+		            if (!isIE) {
+		                addGuestFile();
+		            } else {
+		            	alert("Please Switch to Chrome to Upload Files...");
+		            }
+		        });
+	            $('#btncancel').bind('click', function() {
+	            	window.location.replace('http://irm.m.state.sbu/sites/bmp/SPO/FMD/AMS/Pages/ORF-Submission.aspx');
+	            });
+				$('#btnsave').bind('click', function() {
+					pageSubmit();
+				});
+				$('#viewReqBtn').bind('click', function () {
+					window.location.replace('http://irm.m.state.sbu/sites/bmp/SPO/FMD/AMS/Pages/ORF-Submission-View.aspx');
+				});
+				$('#homeBtn').bind('click', function() {
+	            	window.location.replace('http://irm.m.state.sbu/sites/bmp/SPO/FMD/AMS/Pages/ORF-Submission.aspx');
+				});
+				$("#proceduresChk").change(function() {
+					var goToFormBtn = document.getElementById('clrProcedures');
+					if (document.getElementById('proceduresChk').checked) {
+						goToFormBtn.style.display = "block";
+					} else {
+						goToFormBtn.style.display = "none";
+					}
+				});
+				$("#clrProcedures").bind('click', function() {
+					var orfForm = document.getElementById('main-container');
+					if (document.getElementById('proceduresChk').checked) {
+						document.getElementById('proceduresTxt').style.display = "none";
+						orfForm.style.display = "block";
+					} else {
+						orfForm.style.display = "none";				
+					}
+				});  
+				dfd.resolve("Elements successfully binded!"); 		
+    		}).promise();  	
+    	}
+	
+		/**
+		 * This function stores all global veriables used in the application
+		 * @global
+		 * @returns {Object}	
+		 */
+    	var globalVars = (function() {
+	    	var allFiles = [];
+	    	var fileType = ["- Select -","Expense Item","Guest List","Other"];
+	    	var fileCount = 0;
+			var webUrl = "http://irm.m.state.sbu/sites/bmp/SPO/FMD/AMS";
+			var libName = "ORF_Document_Library";
+			var listName = "ORF_Records";
+	    	var currUser;
+	    	var quarter = "";
+	    	var fiscalYr = 0;
+	    	
+	    	function getAllFiles() {
+	    	   	return allFiles;
+	    	}
+	    	
+	    	function getFileTypes() {
+	    		return fileType;
+	    	}
+	    	
+	    	function getFileCount() {
+	    		return fileCount;
+	    	}
+	    	
+	    	function incrementCount() {
+	    		fileCount++;
+	    		return;
+	    	}
+	    	
+	    	function newFile(rowID, file, fileType) {
+   				allFiles.push({
+	            	ID: rowID,
+	            	file: file,
+	            	type: fileType,
+	            	amount: ""  					
+   				});
+	    		return;
+	    	}
+	    	
+    		function setUser(firstName, lastName, email, userName) {
+    			currUser = {
+    				firstname: firstName,
+    				lastname: lastName,
+    				Email: email,
+    				username: userName
+    			};
+    			return;
+    		}
+    		
+    		function getUser() {
+    			return currUser;
+    		}
+    		
+			function getWebUrl() {
+				return webUrl;
+			}
+			
+			function getLibName() {
+				return libName;
+			}
+			
+			function getListName() {
+				return listName;
+			}
+			
+			function getFiscalQrtr() {
+				return quarter;
+			}
+			
+			function setFiscalQrtr(month) {
+				switch(month) {
+					case 1:
+					case 2:
+					case 3:
+						quarter = "Q2";
+						break;
+					case 4:
+					case 5:
+					case 6:
+						quarter = "Q3";
+						break;
+					case 7:
+					case 8:
+					case 9:
+						quarter = "Q4";
+						break;
+					default:
+						quarter = "Q1";
+						break;
+				}
+				
+				return;
+			}
+			
+			function getFiscalYear() {
+				return fiscalYr;
+			}
+			
+			function setFiscalYear(year) {
+				if (quarter === "Q1") {
+					fiscalYr = year + 1;
+				} else {
+					fiscalYr = year;
+				}
+				return;
+			}
+	    	
+	    	return {
+	    		files: function() { return getAllFiles(); },
+	    		fileTypes: function() { return getFileTypes(); },
+	    		totalCount: function() { return getFileCount(); },
+	    		increment: function() { return incrementCount(); },
+	    		newFiles: function (rowID, file, fileType) { return newFile(rowID, file, fileType); },
+	    		getCurrUser: function() { return getUser(); },
+	    		setCurrUser: function(firstName, lastName, email, userName) 
+	    			{ return setUser(firstName, lastName, email, userName); },
+				webUrl: function() { return getWebUrl(); },
+				libName: function() { return getLibName(); },
+				listName: function() { return getListName(); },
+				getQuarter: function() { return getFiscalQrtr(); },
+				setQuarter: function(month) { return setFiscalQrtr(month); },
+				getFiscalYr: function() { return getFiscalYear(); },
+				setFiscalYr: function(year) { return setFiscalYear(year); }
+	    	}   			
+    	})(globalVars || {});
+
+		/**
+		 * This function checks the permissions of the current user. If the user is part of 
+		 * the proper group, they are allowed to view the View All Requests button
+		 * @public
+		 */   	    	        
+		function chkGroups() {
+			return $.Deferred(function(dfd) {
+				$().SPServices({
+					operation: "GetGroupCollectionFromUser",
+					userLoginName: $().SPServices.SPGetCurrentUser(),
+					async: false,
+					completefunc: function(xData, Status) {
+						if(($(xData.responseXML).find("Group[Name='SPO FMD Owners']").length === 1) || 
+							($(xData.responseXML).find("Group[Name='SPO FMD Members']").length === 1)) {
+							document.getElementById('viewReqBtn').style.display = 'block';
+						}
+					}			
+				}).done(function() {
+					console.log("Users' groups checked!");
+					dfd.resolve();
+				}).fail(function() {
+					dfd.reject("Could not check users' groups...\nCheck the users' credentials manually.");
+				});			
+			}).promise();
+		}
+        
+        /** 
+         * Checks to see if the user is using IE
+         * @public
+         */
+        function compatChk() {
+        	return $.Deferred(function(dfd) {
+	        	if (isIE) {
+	        		alert("You are currently using Internet Explorer. Please switch to Chrome to complete this form.");
+	        		dfd.reject("Internet Explorer Dectected...");
+	        	} else {
+	        		dfd.resolve("Required Browser Detected!");
+	        	}
+        	}).promise();
+        }
+    	    	
+		/**
+		 * assigns the user input to an object for manipulation and uploading
+		 * @public
+		 * @returns {Object} eventObj - gets the inputs from the form and saves them
+		 * @param {string} eventObj.name - the name of the requestor
+		 * @param {string} eventObj.requestOffice - the office that is requesting the event
+		 * @param {string} eventObj.requestInvstmt - the requesting investment
+		 * @param {string} eventObj.eventName - the name of the event
+		 * @param {string} eventObj.eventLoc - the location of the event
+		 * @param {string} eventObj.eventStartDate - the start date
+		 * @param {string} eventObj.eventStartTime - the start time
+		 * @param {string} eventObj.eventEndDate - the end date
+		 * @param {string} eventObj.eventEndTime - the end time
+		 * @param {string} eventObj.eventSummary - the summary of the event
+		 * @param {string} eventObj.totalRqstAmt - the total requested amount of the event
+		 * @param {string} eventObj.eventID - the ID of the event
+		 * @param {string} eventObj.status - the status of the event	 	 
+		 */
+        function saveInputs() {
+            var eventObj = {
+                name: document.getElementById('name').value,
+                requestOffice: document.getElementById('requestOffice').value,
+                requestInvstmt: document.getElementById('requestInvstmt').value,
+                eventName: document.getElementById('eventName').value,
+                eventLoc: document.getElementById('eventLoc').value,
+                eventStartDate: document.getElementById('eventStartDate').value,
+                eventStartTime: document.getElementById('eventStartTime').value,
+                eventEndDate: document.getElementById('eventEndDate').value,
+                eventEndTime: document.getElementById('eventEndTime').value,
+                eventSummary: document.getElementById('eventSummary').value,
+                totalRqstAmt: document.getElementById('totalRqstAmt').value,
+                eventID: 0,
+                status: "User Submitted"
+            };
+            
+            return eventObj;
+        }
+
+		/** 
+		 * Deletes a potential event from the array list
+		 * @public
+		 * @param {string} rowID - where the file is in the files list		
+		 */
+		function deleteItem(rowID) {
+			var arrayLngth = globalVars.files().length;
+			for (var index = (arrayLngth - 1); index >= 0; index--) {
+				if (globalVars.files()[index].ID === rowID) {
+					globalVars.files().splice(index, 1);
+					updateTotalMoney();
+				}			
+			}
+			return;
+		}
+		
+		/** 
+		 * Shows the money for each expense item
+		 * @public
+		 * @param {string} elementID - the money value of the current element
+		 * @param {string} rowID - where the file is in the files list
+		 */
+		function showMoney(elementID, rowID) {
+			var arrayLngth = globalVars.files().length;
+			var value = document.getElementById(elementID).value;
+			for (var index = 0; index < arrayLngth; index++) {
+				if (globalVars.files()[index].ID === rowID) {
+					globalVars.files()[index].amount = value;
+				}
+			}
+			return;
+		}
+		
+		/** 
+		 * validates the user inputted money
+		 * @public
+		 * @param {string} money - the money to be validated
+		 * @param {string} currElement - the current element  		
+		 */
+        function validateMoney(money, currElement) {
+        	var newAmount = document.getElementById(currElement);
+			var dollarSign = /^\u0024/g;
+        	var hasDollarSign = false;
+			var moneyPattern = /(?=.)^\$?(([1-9][0-9]{0,2}([0-9]|,[0-9]{3})*)|0)?(\.[0-9]{1,2})?$/;
+			
+			if (String(money).match(dollarSign) !== null) {
+				hasDollarSign = true;
+			}
+								
+			if ((String(money).match(moneyPattern) !== null)) {
+				newAmount.value = (hasDollarSign === true ? money : "$" + money);
+			} else {
+				newAmount.value = "$0.00";
+			}
+			
+			return;
+        }
+
+		/** 
+		 * updates the total amount on the form for an event
+		 * @public
+		 */
+		function updateTotalMoney() {
+			var totalAmount = document.getElementById('totalRqstAmt');
+			var list = document.getElementById('expFilesList');
+			var listItems = list.getElementsByClassName('moneyBox');
+			var listLength = listItems.length;
+			var newAmount = 0;
+						
+			for (var index = 0; index < listLength; index++) {
+				var currValue = String(listItems[index].value) === "" ? "$0" : String(listItems[index].value);
+				currValue = parseFloat(currValue.slice(1, currValue.length));
+				newAmount += currValue;
+			}
+	
+			totalAmount.value = ("$" + newAmount.toFixed(2));
+			return;
+		}
+		
+		/**
+		 * Makes sure that the user inputs all relevant information for 
+		 * each type of file 
+		 * @public
+		 * @returns {boolean}
+		 */
+		function fileValidation() {
+			var expList = document.getElementById('expFilesList');
+			var amountVals = expList.getElementsByClassName('moneyBox');
+			var amtLength = amountVals.length;
+			var noMny = false;
+			
+			var guestList = document.getElementById('guestFilesList');
+			var fileVals = document.getElementsByClassName('file-name');
+			var fileLength = fileVals.length;
+					
+			if (fileLength < 1) {
+				alert("You must include a guest list for your event");
+				return false;
+			}
+					
+			if (amtLength > 0) {
+				for (var index = 0; index < amtLength; index++) {					
+					if (amountVals[index].value === "$0.00") {
+						alert("Please add a value to the amount requested column");
+						noMny = true;
+						break;
+					}
+				}
+			} else {
+				alert("You must include an expense report for your event");
+				return false;
+			}
+			
+			if (noMny) {
+				return false;
+			} else {
+				return true;
+			}		
+		}
+		
+		/**
+		 * Gives a unique file name to each of the files updated
+		 * @public 
+		 * @param {string} fileName	- the name of the file
+		 * @returns {string} fileName - the unique file name
+		 */
+		function uniqueFileName(fileName) {
+			var uniqueNumOne = (Math.floor(Math.random() * 50) + 1);
+			var uniqueNumTwo = (Math.floor(Math.random() * 200) + 1);
+			fileName = uniqueNumOne + "-" + uniqueNumTwo + "_" + fileName;
+			return fileName;
+		}
+		
+		/** 
+		 * Creates the guest attachments HTML list item
+		 * @public
+		 * @returns {Object} input - the file object
+		 * @param {string} input.type - file
+		 */		
+		function addGuestFile() {
+        	var rowID = "row-" + globalVars.totalCount();
+			var $list = $('#guestFilesList');			
+            var input = document.createElement('input');
+            input.setAttribute('type', 'file');
+            var $input = $(input);
+            
+            var li = document.createElement('li');
+            var $li = $(li);
+            var deleteBtn = document.createElement('button');
+            deleteBtn.style.borderRadius = "5px";
+            deleteBtn.id = "btn-" + globalVars.totalCount();
+            deleteBtn.innerHTML = "Delete";
+            deleteBtn.title = "Click to remove";
+            deleteBtn.setAttribute('type', 'button');
+            deleteBtn.className = "deleteBtn";
+            $li.append($input);
+            
+            $input.bind('change', function(ev) {
+           		_file = ev.target.files[0]; 
+	            globalVars.newFiles(rowID, _file, "Guest List");
+	            var fileNameBox = document.createElement('input');
+	            fileNameBox.style.borderRadius = "5px";
+	            fileNameBox.value = _file.name;
+	            fileNameBox.innerHTML = _file.name;
+	            fileNameBox.id = "fileNameBox-" + globalVars.totalCount();
+	            fileNameBox.className = "file-name";
+	            fileNameBox.setAttribute('type', 'text');
+	            fileNameBox.readOnly = true;
+	            $li.append(fileNameBox);
+	           		            
+				$li.append(deleteBtn);
+				$list.append($li);
+			});
+            
+            $(deleteBtn).on('click', function(ev) {
+                $li.remove();
+    	        deleteItem(rowID);
+                var items = $list.find('li');
+                ev.stopPropagation();
+            });
+            
+            $input.click();
+            globalVars.increment();
+            return input;     
+		}
+    	
+		/** 
+		 * Creates the expense attachments HTML list item
+		 * @public
+		 * @returns {Object} input - the file object
+		 * @param {string} input.type - file
+		 */
+        function addExpFile() {
+        	var rowID = "row-" + globalVars.totalCount();
+            var $list = $('#expFilesList');
+            var input = document.createElement('input');
+            input.setAttribute('type', 'file');
+            var $input = $(input);
+            var li = document.createElement('li');
+            var $li = $(li);
+            var deleteBtn = document.createElement('button');
+            deleteBtn.style.borderRadius = "5px";
+            deleteBtn.id = "btn-" + globalVars.totalCount();
+            deleteBtn.innerHTML = "Delete";
+            deleteBtn.title = "Click to remove";
+            deleteBtn.setAttribute('type', 'button');
+            deleteBtn.className = "deleteBtn";
+            $li.append($input);
+            $input.bind('change', function(ev) {
+           		_file = ev.target.files[0]; 
+	            globalVars.newFiles(rowID, _file, "Expense Item");
+	            var fileNameBox = document.createElement('input');
+	            fileNameBox.style.borderRadius = "5px";
+	            fileNameBox.value = _file.name;
+	            fileNameBox.innerHTML = _file.name;
+	            fileNameBox.id = "fileNameBox-" + globalVars.totalCount();
+	            fileNameBox.className = "file-name";
+	            fileNameBox.setAttribute('type', 'text');
+	            fileNameBox.readOnly = true;
+	            $li.append(fileNameBox);
+	           		            
+	        	var amountBox = document.createElement('input');
+	        	amountBox.id = "amountBox-" + globalVars.totalCount();
+	        	amountBox.setAttribute('type', 'text');
+	        	amountBox.placeholder = "$0.00";
+	        	amountBox.value = "$0.00";
+	        	amountBox.className = "moneyBox";
+				$li.append(amountBox);
+
+	            $(amountBox).on('change', function() {
+					var $val = $(this).val();
+					validateMoney($val, amountBox.id);
+					updateTotalMoney();
+					showMoney(amountBox.id, rowID);
+	            });
+	            
+				$li.append(deleteBtn);
+				
+	            $(deleteBtn).on('click', function(ev) {
+	                $li.remove();
+	    	        deleteItem(rowID);
+	                var items = $list.find('li');
+	                ev.stopPropagation();
+	            });
+       
+	       		$list.append($li);
+            });
+                     			
+            $input.click();
+            globalVars.increment();
+            return input;
+        }
+
+		/** 
+		 * Gets the: first name, last name, email, and the user name
+		 * @public
+		 * @returns {Promise} input - the file object
+		 */   	
+    	function getUserInfo() {
+    	    return $.Deferred(function(dfd) {
+	            var currUser = $().SPServices.SPGetCurrentUser({
+	                fieldNames: ["FirstName", "LastName", "Email", "UserName"],
+	                debug: false
+	            });        
+	            
+	            globalVars.setCurrUser(currUser.FirstName, currUser.LastName, 
+	            currUser.Email, currUser.UserName);
+	            dfd.resolve("User information successfully found!");	            
+            }).promise();
+    	}
+    	
+		/** 
+		 * Makes sure that the user answered every input
+		 * @public
+		 * @param {Object} eventObj
+		 * @param {string} eventObj.name - the name of the requestor
+		 * @param {string} eventObj.requestOffice - the office that is requesting the event
+		 * @param {string} eventObj.requestInvstmt - the requesting investment
+		 * @param {string} eventObj.eventName - the name of the event
+		 * @param {string} eventObj.eventLoc - the location of the event
+		 * @param {string} eventObj.eventStartDate - the start date
+		 * @param {string} eventObj.eventStartTime - the start time
+		 * @param {string} eventObj.eventEndDate - the end date
+		 * @param {string} eventObj.eventEndTime - the end time
+		 * @param {string} eventObj.eventSummary - the summary of the event
+		 * @param {string} eventObj.totalRqstAmt - the total requested amount of the event
+		 * @param {string} eventObj.eventID - the ID of the event
+		 * @param {string} eventObj.status - the status of the event
+		 * @returns {number} errors - how many errors were found
+		 */
+		function validateInput(eventObj) {
+    		var errors = 0;
+    		for (var key in eventObj) {
+    			if (eventObj.hasOwnProperty(key)) {
+    				switch(eventObj[key]) {
+    					case null:
+    						document.getElementById(key).style.backgroundColor = "#ff9e9e";
+    						errors++;
+    						break;
+    					case undefined:
+    						document.getElementById(key).style.backgroundColor = "#ff9e9e";
+    						errors++;
+    						break;
+    					case "0":
+    						document.getElementById(key).style.backgroundColor = "#ff9e9e";
+    						errors++;
+    						break;   						
+    					case "":
+    						document.getElementById(key).style.backgroundColor = "#ff9e9e";
+    						errors++;
+    						break;
+    					case "MM/DD/YYYY":
+    						document.getElementById(key).style.backgroundColor = "#ff9e9e";
+    						errors++;
+							break;
+    					default:
+    						if (document.getElementById(key) !== null) {
+    							document.getElementById(key).style.backgroundColor = "#fff";
+    						}    						
+    						break;
+    				}
+    			}
+    		}    		
+    		return errors;
+    	}
+	
+		/** 
+		 * checks to see if the user added in dates and times properly 
+		 * @public
+		 * @param {Object} eventObj
+		 * @param {string} eventObj.name - the name of the requestor
+		 * @param {string} eventObj.requestOffice - the office that is requesting the event
+		 * @param {string} eventObj.requestInvstmt - the requesting investment
+		 * @param {string} eventObj.eventName - the name of the event
+		 * @param {string} eventObj.eventLoc - the location of the event
+		 * @param {string} eventObj.eventStartDate - the start date
+		 * @param {string} eventObj.eventStartTime - the start time
+		 * @param {string} eventObj.eventEndDate - the end date
+		 * @param {string} eventObj.eventEndTime - the end time
+		 * @param {string} eventObj.eventSummary - the summary of the event
+		 * @param {string} eventObj.totalRqstAmt - the total requested amount of the event
+		 * @param {string} eventObj.eventID - the ID of the event
+		 * @param {string} eventObj.status - the status of the event
+		 * @returns {boolean} 
+		 */
+        function validateDateTimes(eventObj) {
+        	var amOrPm = "[a-zA-Z]";
+            var dateConcat = /^\d{2}[./-]\d{2}[./-]\d{4}$/g;
+            var timeConcat = /^([0]\d)|([1][0-2])|([1-9]):([0-5]\d)/g;
+            var validStartDate = String(eventObj.eventStartDate).match(dateConcat);
+            var validEndDate = String(eventObj.eventEndDate).match(dateConcat);          	           
+            var validStartTime = String(eventObj.eventStartTime).match(timeConcat);
+            var validEndTime = String(eventObj.eventEndTime).match(timeConcat);
+                                    
+            if (((validStartDate !== null) && (validEndDate !== null)) &&
+                ((validStartTime !== null) && (validEndTime !== null))) {
+                return true;
+            } else {
+            	alert("The dates and/or times you have entered are invalid. Please check your inputs...");
+				return false;
+            }
+        }
+    	
+    	/** 
+    	 * formats the dates and times into ISO8601 format
+    	 * @public
+		 * @param {Object} eventObj
+		 * @param {string} eventObj.name - the name of the requestor
+		 * @param {string} eventObj.requestOffice - the office that is requesting the event
+		 * @param {string} eventObj.requestInvstmt - the requesting investment
+		 * @param {string} eventObj.eventName - the name of the event
+		 * @param {string} eventObj.eventLoc - the location of the event
+		 * @param {string} eventObj.eventStartDate - the start date
+		 * @param {string} eventObj.eventStartTime - the start time
+		 * @param {string} eventObj.eventEndDate - the end date
+		 * @param {string} eventObj.eventEndTime - the end time
+		 * @param {string} eventObj.eventSummary - the summary of the event
+		 * @param {string} eventObj.totalRqstAmt - the total requested amount of the event
+		 * @param {string} eventObj.eventID - the ID of the event
+		 * @param {string} eventObj.status - the status of the event
+		 * @returns {boolean}
+		 */
+        function formatDateTimes(eventObj) {
+        	var amOrPm = "[a-zA-Z]";
+        	var beforeNoon = "0";
+            var pastNoon = 12;
+            var startDateString = String(eventObj.eventStartDate).split("/");
+            var endDateString = String(eventObj.eventEndDate).split("/");
+            var formattedStartDate = startDateString[2] + "-" + startDateString[0] + "-" + startDateString[1];
+            var formattedEndDate = endDateString[2] + "-" + endDateString[0] + "-" + endDateString[1];
+            var splitStartTime = String(eventObj.eventStartTime).split(":")[0];
+            var splitEndTime = String(eventObj.eventEndTime).split(":")[0];
+            var finalStartTime = "";
+            var finalEndTime = "";
+            var indexOfStartTime = eventObj.eventStartTime.search(amOrPm);
+            var indexOfEndTime = eventObj.eventEndTime.search(amOrPm);
+                               
+            if ((eventObj.eventStartTime.slice(indexOfStartTime, (indexOfStartTime+2)) === "pm") && (splitStartTime !== "12")) {
+                finalStartTime = (parseInt(splitStartTime, 10) + pastNoon) + ":" + String(eventObj.eventStartTime).split(":")[1];
+            }
+            if ((eventObj.eventEndTime.slice(indexOfEndTime, (indexOfEndTime+2)) === "pm") && (splitEndTime !== "12")) {
+                finalEndTime = (parseInt(splitEndTime, 10) + pastNoon) + ":" + String(eventObj.eventEndTime).split(":")[1];
+            }
+            
+            if ((eventObj.eventStartTime.slice(indexOfStartTime, (indexOfStartTime+2)) === "am") && (splitStartTime === "12")) {
+                finalStartTime = beforeNoon + ":" + String(eventObj.eventStartTime).split(":")[1];
+            }
+            if ((eventObj.eventEndTime.slice(indexOfEndTime, (indexOfEndTime+2)) === "am") && (splitEndTime === "12")) {
+                finalEndTime = beforeNoon + ":" + String(eventObj.eventEndTime).split(":")[1];
+            } 
+            
+            finalStartTime = finalStartTime !== "" ? finalStartTime : eventObj.eventStartTime;
+            finalEndTime = finalEndTime !== "" ? finalEndTime : eventObj.eventEndTime;
+
+            if (parseInt(String(finalStartTime).split(":")[0], 10) < 10) {
+            	finalStartTime = "0" + finalStartTime;
+            }
+            if (parseInt(String(finalEndTime).split(":")[0], 10) < 10) {
+            	finalEndTime = "0" + finalEndTime;
+            }
+            
+			var indexOfStartLetter = finalStartTime.search(amOrPm);
+			var indexOfEndLetter = finalEndTime.search(amOrPm);
+            
+			finalStartTime = finalStartTime.slice(0, indexOfStartLetter);
+			finalEndTime = finalEndTime.slice(0, indexOfEndLetter);
+
+			var testStartDate = new Date(startDateString[2], startDateString[1], startDateString[0], 
+				parseInt(String(finalStartTime).split(":")[0]), parseInt(String(finalStartTime).split(":")[1]), 0, 0).getTime();
+							
+			var testEndDate = new Date(endDateString[2], endDateString[1], endDateString[0], 
+				parseInt(String(finalEndTime).split(":")[0]), parseInt(String(finalEndTime).split(":")[1]), 0, 0).getTime();	
+		    
+            if (testEndDate < testStartDate) {
+            	alert("Your events' start time must be greater than its end time...");
+            	return false;
+            } else {
+            	globalVars.setQuarter(parseInt(startDateString[0]));
+            	globalVars.setFiscalYr(parseInt(startDateString[2]));
+            	eventObj.eventStartTime = new Date(formattedStartDate + "T" + finalStartTime + ":00.000Z").toISOString();
+            	eventObj.eventEndTime = new Date(formattedEndDate + "T" + finalEndTime + ":00.000Z").toISOString();
+            	return true;
+            }                       
+        }
+        
+		/**
+		 * Saves all inputs to the SP list
+    	 * @public
+		 * @param {Object} eventObj
+		 * @param {string} eventObj.name - the name of the requestor
+		 * @param {string} eventObj.requestOffice - the office that is requesting the event
+		 * @param {string} eventObj.requestInvstmt - the requesting investment
+		 * @param {string} eventObj.eventName - the name of the event
+		 * @param {string} eventObj.eventLoc - the location of the event
+		 * @param {string} eventObj.eventStartDate - the start date
+		 * @param {string} eventObj.eventStartTime - the start time
+		 * @param {string} eventObj.eventEndDate - the end date
+		 * @param {string} eventObj.eventEndTime - the end time
+		 * @param {string} eventObj.eventSummary - the summary of the event
+		 * @param {string} eventObj.totalRqstAmt - the total requested amount of the event
+		 * @param {string} eventObj.eventID - the ID of the event
+		 * @param {string} eventObj.status - the status of the event		
+		 * @returns {Promise}
+		 */      
+        function saveEventData(eventObj) {
+        	var amount = eventObj.totalRqstAmt.slice(1, eventObj.totalRqstAmt.length);
+        	amount = parseFloat(amount);
+        	
+        	return $.Deferred(function(dfd) {
+	            $().SPServices({
+	                operation: "UpdateListItems",
+	                batchCmd: "New",
+	                webURL: globalVars.webUrl(),
+	                listName: globalVars.listName(),
+	                async: false,
+	                valuepairs: [
+	                    ["Title", eventObj.eventName],
+	                    ["Name", eventObj.name],
+	                    ["UserName", globalVars.getCurrUser().username],
+	                    ["Email", globalVars.getCurrUser().Email],
+	                    ["Request_Office", eventObj.requestOffice],
+	                    ["Request_Invstmt", eventObj.requestInvstmt],
+	                    ["Event_Name", eventObj.eventName],
+	                    ["Event_Location", eventObj.eventLoc],
+	                    ["Start_Time", eventObj.eventStartTime],
+	                    ["End_Time", eventObj.eventEndTime],
+	                    ["Event_Summary", eventObj.eventSummary],
+	                    ["Request_Amount", amount],
+	                    ["Request_Decision", eventObj.status],
+	                    ["Fiscal_Quarter", globalVars.getQuarter()],
+	                    ["Fiscal_Year", globalVars.getFiscalYr()]
+	                ],
+	                completefunc: function(xData, Status) {
+	                    eventObj.eventID = $().SPServices.SPGetLastItemId({
+	                        webURL: globalVars.webUrl(),
+	                        listName: globalVars.listName()
+	                    });
+	                }
+	            }).done(function() {
+	            	dfd.resolve("Event details successfully uploaded!");
+	            }).fail(function(err) {
+	            	dfd.reject("The event details were not uploaded...\n-Check the data and list/web URLs.");
+	            });       	
+        	}).promise();
+        }
+    
+    	/** 
+    	 * contains all of the functions and variables to grab 
+    	 * and submit the data on the form
+    	 * @public
+    	 * @returns {Promise}
+    	 */
+        function formData() {
+            var requestInvestSlt = document.getElementById("requestInvstmt");
+            var requestOfficeSlt = document.getElementById("requestOffice");
+
+            $("#eventStartDate").datepicker();
+            $("#eventEndDate").datepicker();
+            
+            $("#eventStartTime").timepicker({'scrollDefault': 'now'});
+			$("#eventEndTime").timepicker({'scrollDefault': 'now'});
+			
+			return $.Deferred(function(dfd) {
+	            $().SPServices({
+	                async: false,
+	                listName: "ORF_Request_Investment",
+	                operation: "GetListItems",
+	                webURL: globalVars.webUrl(), 
+	                CAMLViewFields: "<ViewFields>" +
+	                    "<FieldRef Name='Title' />" +
+	                    "</ViewFields>",
+	                completefunc: function(xData, Status) {
+	
+		                $(xData.responseXML).SPFilterNode("z:row").each(function() {
+		                    var listItem = $(this).attr("ows_Title");
+		                    var option = document.createElement('option');
+		
+		                    option.value = listItem;
+		                    option.innerHTML = listItem;
+		                    requestInvestSlt.appendChild(option);
+		                });
+	                }
+	            }).done(function() {
+		            $().SPServices({
+		                async: false,
+		                listName: "ORF_Requesting_Offices",
+		                operation: "GetListItems",
+		                CAMLViewFields: "<ViewFields>" +
+		                    "<FieldRef Name='Title' />" +
+		                    "</ViewFields>",
+		                completefunc: function(xData, Status) {
+		
+		                    $(xData.responseXML).SPFilterNode("z:row").each(function() {
+		                        var listItem = $(this).attr("ows_Title");
+		                        var option = document.createElement('option');
+		
+		                        option.value = listItem;
+		                        option.innerHTML = listItem;
+		                        requestOfficeSlt.appendChild(option);
+		                    });
+		                }
+		            }).done(function() {
+		            	dfd.resolve("Data from ORF_Request_Investment and ORF_Requesting_Offices was retrieved!");
+		            });	            
+	            }).fail(function() {
+	            	dfd.reject("An error occurred retrieving the data from ORF_Request_Investment...\nCheck the web URL");
+	            });		
+			}).promise();     
+        }
+        
+        /** 
+         * updates the current list item in the document library
+         * @public
+         * @param {string} fileName - the name of the file
+		 * @param {Object} eventObj
+		 * @param {string} eventObj.name - the name of the requestor
+		 * @param {string} eventObj.requestOffice - the office that is requesting the event
+		 * @param {string} eventObj.requestInvstmt - the requesting investment
+		 * @param {string} eventObj.eventName - the name of the event
+		 * @param {string} eventObj.eventLoc - the location of the event
+		 * @param {string} eventObj.eventStartDate - the start date
+		 * @param {string} eventObj.eventStartTime - the start time
+		 * @param {string} eventObj.eventEndDate - the end date
+		 * @param {string} eventObj.eventEndTime - the end time
+		 * @param {string} eventObj.eventSummary - the summary of the event
+		 * @param {string} eventObj.totalRqstAmt - the total requested amount of the event
+		 * @param {string} eventObj.eventID - the ID of the event
+		 * @param {string} eventObj.status - the status of the event
+		 * @param {number} fileIndex - where the data for the file is in the list of arrays
+		 * @returns {Promise}
+         */
+        function uploadFileDetails(fileName, eventObj, fileIndex, fileID) {
+        	console.log("Preparing to upload files...");
+        	console.log("	Value of fileID: " + fileID);
+        	var amount = 0;
+        	
+        	if (globalVars.files()[fileIndex].amount !== "") {
+	        	amount = globalVars.files()[fileIndex].amount.slice(1, globalVars.files()[fileIndex].amount.length);
+	        	amount = parseFloat(amount);        	
+        	}
+        	
+        	return $.Deferred(function(dfd) {
+        		if (fileID === "undefined") {
+					$().SPServices({
+						async: false,
+						operation: "GetListItems",
+						webURL: globalVars.webUrl(),
+						listName: globalVars.libName(),
+						CAMLQuery: "<Query><Where><Eq><FieldRef Name='LinkFilenameNoMenu'/><Value Type='Text'>"+fileName+"</Value></Eq></Where></Query>",
+		                CAMLViewFields: "<ViewFields>" +
+		                    "<FieldRef Name='ID' />" +
+		                    "</ViewFields>",
+						completefunc: function(xData, Status) {
+							$(xData.responseXML).SPFilterNode("z:row").each(function(){
+								fileID = $(this).attr("ows_ID");
+							});
+						}
+					}).done(function(){
+						$().SPServices({
+							operation: "UpdateListItems",
+							batchCmd: "Update",
+							webURL: globalVars.webUrl(),
+							listName: globalVars.libName(),
+							ID: fileID,
+							async: false,
+							valuepairs: [["Doc_ID", eventObj.eventID], ["Event_Name", eventObj.eventName],
+							 ["Amount", amount], ["File_Type", globalVars.files()[fileIndex].type]],
+							completefunc: null
+						}).done(function() {
+							dfd.resolve("Request Submitted Successfully!");
+						});
+					}).fail(function() {
+						dfd.reject("An issue occurred...\n-Check the web/library URLs and the CAMLQuery.\n-Library ID: " + fileID);
+					});       		
+        		} else {
+					$().SPServices({
+						operation: "UpdateListItems",
+						batchCmd: "Update",
+						webURL: globalVars.webUrl(),
+						listName: globalVars.libName(),
+						ID: fileID,
+						async: false,
+						valuepairs: [["Doc_ID", eventObj.eventID], ["Event_Name", eventObj.eventName],
+						 ["Amount", amount], ["File_Type", globalVars.files()[fileIndex].type]],
+						completefunc: null
+					}).done(function() {
+						dfd.resolve("Request Submitted Successfully!");
+					}).fail(function() {
+						dfd.reject("An issue occurred...\n-Check the web/library URLs and the CAMLQuery.");
+					});         		
+        		}       	
+        	}).promise();
+        }
+        
+        /** 
+         * gets the file reader
+         * @public
+         * @param {Object} file - the file object to be read
+         * @returns {Promise}
+         */
+		var getFileBuffer = function(file) {
+			return $.Deferred(function(dfd) {
+				var reader = new FileReader();
+				
+				reader.onload = function(e) {
+				    dfd.resolve(e.target.result);
+				}
+				reader.onerror = function(e) {
+				    dfd.reject(e.target.error);
+				}
+				
+				reader.readAsArrayBuffer(file);		
+			}).promise();
+		};
+
+		/**
+		 * uploads the file to the document library
+		 * @public
+		 * @param {Object} currFile - the file object
+		 * @param {number} fileIndex - where the details of the file are 
+		 * in the array
+		 * @returns {Promise}
+		 */		
+		function uploadFile(currFile, eventObj, fileIndex) {
+			var fileName = uniqueFileName(currFile.name);
+			return $.Deferred(function(dfd) {
+				getFileBuffer(currFile).then(function(buffer) {
+					$.ajax({
+						url: globalVars.webUrl() + '/_vti_bin/listdata.svc/' + globalVars.libName(),
+						type: 'POST',
+						processData: false,
+						contentType: currFile.type,
+						data: buffer,
+						headers: {
+							"Accept" : "application/json;odata=verbose",
+							"Slug" : globalVars.webUrl() + '/' + globalVars.libName() + '/' + fileName
+						}
+					}).done(function(result){
+						uploadFileDetails(fileName, eventObj, fileIndex, result.d.Id).done(function(doneMsg) {
+							dfd.resolve(doneMsg);
+						});								
+					}).fail(function(err){
+						console.log("There was an error....");
+						console.log(err);
+						console.log("\nAttempting to recover..." );
+						uploadFileDetails(fileName, eventObj, fileIndex, "undefined").done(function(doneMsg) {
+							dfd.resolve(doneMsg);						
+						});						
+					});			
+				});
+			}).promise();
+		}
+                
+		/**
+		 * uploads files one at a time
+		 * @public
+		 * @param {Object} eventObj
+		 * @param {string} eventObj.name - the name of the requestor
+		 * @param {string} eventObj.requestOffice - the office that is requesting the event
+		 * @param {string} eventObj.requestInvstmt - the requesting investment
+		 * @param {string} eventObj.eventName - the name of the event
+		 * @param {string} eventObj.eventLoc - the location of the event
+		 * @param {string} eventObj.eventStartDate - the start date
+		 * @param {string} eventObj.eventStartTime - the start time
+		 * @param {string} eventObj.eventEndDate - the end date
+		 * @param {string} eventObj.eventEndTime - the end time
+		 * @param {string} eventObj.eventSummary - the summary of the event
+		 * @param {string} eventObj.totalRqstAmt - the total requested amount of the event
+		 * @param {string} eventObj.eventID - the ID of the event
+		 * @param {string} eventObj.status - the status of the event
+		 * @returns {Promise}
+		 */
+        function beginSavingFiles(eventObj) {
+        	var fileArrIndex = globalVars.files().length;
+        	var promises = [];
+        	
+        	return $.Deferred(function(dfd) {
+        		if (fileArrIndex < 1) {
+        			dfd.reject("Please Include your Guest List(s) and Expense(s) Files...");
+        		} else {        			
+		        	for (var filesInd = 0; filesInd < fileArrIndex; filesInd++) {
+			        	promises.push(uploadFile(globalVars.files()[filesInd].file, eventObj, filesInd));
+			        }
+			        $.when.apply($,promises).done(function(doneMsg) {
+			    		dfd.resolve(doneMsg); 		        	
+			        }).fail(function(doneMsg) {
+			        	dfd.reject(doneMsg); 	
+			        });     		
+        		}
+        	}).promise();	        
+        }
+
+		/** 
+		 * Begins the form submission process once clicked
+		 * @public
+		 */
+        function pageSubmit() {
+        	document.getElementById('waitDiv').style.display = "block";
+        	var eventObj = saveInputs();
+        	if ((validateInput(eventObj) < 1) && validateDateTimes(eventObj) && formatDateTimes(eventObj) && fileValidation()) {
+        		saveEventData(eventObj).done(function(evntMsg) {
+        			console.log(evntMsg);
+	        		beginSavingFiles(eventObj).done(function(saveMsg) {
+	        			console.log(saveMsg);
+	        			window.location.replace('http://irm.m.state.sbu/sites/bmp/SPO/FMD/AMS/Pages/ORF-Submission.aspx');
+	        		}).fail(function(errMsg) {
+	        			console.log(errMsg);
+						document.getElementById('pageLoader').style.display = "none";
+						document.getElementById('errTxt').style.display = "block";
+						document.getElementById('errTxt').innerHTML = errMsg;
+	        		});       		
+        		}).fail(function(errMsg) {
+        			console.log(errMsg);
+					document.getElementById('pageLoader').style.display = "none";
+					document.getElementById('errTxt').style.display = "block";
+					document.getElementById('errTxt').innerHTML = errMsg;
+        		});        		
+        	} else {
+				document.getElementById('waitDiv').style.display = "none";
+        	}
+        	return;
+        }
+        
+		/**
+		 * Shows the initial view of the application
+		 * @public		
+		 */
+        function initView() {
+	        document.getElementById('name').value = globalVars.getCurrUser().firstname + " " + globalVars.getCurrUser().lastname;
+	    	document.getElementById('waitDiv').style.display = "none";
+	    	document.getElementById('btns').style.display = "block";
+	  		document.getElementById('proceduresTxt').style.display = "block";
+	  		return;
+        }
+
+		/** 
+		 * Loads all needed modules of the application
+		 * @public
+		 * @returns {promise}
+		 */        
+        function start() {
+        	var setup = [
+        		compatChk(),
+        		bindElements(),
+        		getUserInfo(),
+        		formData(),
+        		chkGroups()
+        	];
+        	
+        	return $.Deferred(function(dfd) {
+				$.when.apply($,setup).done(function(){
+				 	dfd.resolve("Initial items loaded...\nInitiating page...");
+				}).fail(function() {
+					dfd.reject("Couldn't load required components to the application...\nCheck the logs for more information.");
+				});       	
+        	}).promise();
+        }
+
+        $(document).ready(function() {
+			start().done(function(strtMsg) {				
+				console.log(strtMsg);
+				initView();
+			}).fail(function(strtMsg) {
+				console.log(strtMsg);
+			});
+        });
+    </script>
+    <!--[if gte mso 9]><xml>
+<mso:CustomDocumentProperties>
+<mso:_dlc_DocId msdt:dt="string">IRMBMP-1344-95</mso:_dlc_DocId>
+<mso:_dlc_DocIdItemGuid msdt:dt="string">62c4383b-a508-4ef8-96c0-09eface4c20e</mso:_dlc_DocIdItemGuid>
+<mso:_dlc_DocIdUrl msdt:dt="string">http://irm.m.state.sbu/sites/bmp/SPO/FMD/AMS/_layouts/DocIdRedir.aspx?ID=IRMBMP-1344-95, IRMBMP-1344-95</mso:_dlc_DocIdUrl>
+</mso:CustomDocumentProperties>
+</xml><![endif]-->
+</head>
+<body>
+	<div id="waitDiv" class="waiting">
+		<div id="pageLoader" class="loader"></div>
+		<p id="errTxt"></p>
+	</div>
+	<div id="btns">
+		<input id="viewReqBtn" type="button" class="btn btn-primary btn-sm" value="View Requests" />
+		<input id="homeBtn" type="button" class="btn btn-primary btn-sm" value="Home" />	
+	</div>
+    <div id="main-container">
+        <div id="form-container-new" class="form-wrapper">
+            <div id="form-main" class="form-main content-box">
+                <div class="prepend-1 span-6 boxSpacing">
+                    <label for="name">Requestor</label>
+                    <input id="name" type="text" readonly="readonly" style="border-radius: 5px;" class="span-6"></input>
+                </div>
+                <div id="rqstOffice" class="span-6 append-7 last boxSpacing">
+                    <label for="requestOffice">Requesting Office</label>
+                    <select id="requestOffice" style="border-radius: 5px;" class="span-6">
+						<option value="0"> - Select - </option>
+					</select>
+                </div>
+                <div class="prepend-1 span-6 boxSpacing">
+                    <label for="requestInvstmt">Requesting Investment</label>
+                    <select id="requestInvstmt" style="border-radius: 5px;" class="req span-6">
+						<option value="0"> - Select - </option>
+					</select>
+                </div>
+                <div class="span-6 boxSpacing">
+                    <label for="eventName">Event Name</label>
+                    <input id="eventName" type="text" style="border-radius: 5px;" class="span-6" />
+                </div>
+                <div class="span-6 boxSpacing">
+                    <label for="eventLoc">Event Location</label>
+                    <input id="eventLoc" type="text" style="border-radius: 5px;" class="span-6"></input>
+                </div>
+                <div class="prepend-1 span-6 boxSpacing">
+                    <label for="eventStartDate">Start Date and Time</label>
+                    <input id="eventStartDate" style="border-radius: 5px;" type="text" readonly="readonly" placeholder="MM/DD/YYYY" value="MM/DD/YYYY" maxlength="10" />
+                    <input id="eventStartTime" style="border-radius: 5px;" type="text" placeholder="12:00pm" value="12:00pm" class="dateBoxWidth" maxlength="7" />
+                </div>
+                <div class="span-6 boxSpacing">
+                    <label for="eventEndDate">End Date and Time</label>
+                    <input id="eventEndDate" style="border-radius: 5px;" type="text" readonly="readonly" placeholder="MM/DD/YYYY" value="MM/DD/YYYY" maxlength="10" />
+                    <input id="eventEndTime" style="border-radius: 5px;" type="text" placeholder="12:00pm" value="12:00pm" class="dateBoxWidth" maxlength="7" />
+                </div>
+                <div class="span-6 boxSpacing">
+                    <label for="rqstAmount">Total Amount Requested</label>
+                    <input id="totalRqstAmt" type="text" style="border-radius: 5px;" readonly="readonly" placeholder="$0.00" value="$0.00" maxlength="10" />
+                </div>
+                <div class="prepend-1 span-18 append-1 last boxSpacing">
+                    <label for="eventSummary">Event Summary</label>
+                    <textarea id="eventSummary" style="border-radius: 5px;" class="req span-18"></textarea>
+                </div>
+				<div class="prepend-1 span-18 append-1 append-bottom last">
+                    <label>Guest List</label>
+                    <div id="label-cntnr">
+	                    <div id="nameHeader">
+	                    	<label>File Name</label>
+	                    </div>                 
+                    </div>
+                    <div id="guestList" class="custom-files-upload">
+                        <ul id="guestFilesList"></ul>
+                    </div>
+                    <input type="button" id="btnGuestFile" style="border-radius: 5px;" value="Add Guest List" />
+                    <div class="attachment-container"></div>
+                </div>
+                <div class="prepend-1 span-18 append-1 append-bottom last">
+                    <label>Expense Attachments</label>
+                    <div id="label-cntnr">
+	                    <div id="nameHeader">
+	                    	<label>File Name</label>
+	                    </div>
+	                    <div id="amtHeader">
+	                    	<label>Amount Requested</label>
+	                    </div>                   
+                    </div>
+                    <div id="expList"class="custom-files-upload">
+                        <ul id="expFilesList"></ul>
+                    </div>
+                    <input type="button" id="btnAddFile" style="border-radius: 5px;" value="Add File" />
+                    <div class="attachment-container"></div>
+                </div>
+                <div class="span-5 prepend-5 prepend-top">
+                    <button id="btnsave" type="button" style="border-radius: 5px;" class="savebtn">
+						Save
+					</button>
+                </div>
+                <div class="span-5 append-5 prepend-top append-bottom last">
+                    <button id="btncancel" type="button" style="border-radius: 5px;" class="cancelbtn">
+						Cancel
+					</button>
+                </div>
+            </div>
+        </div>
+	</div>
+	<div id="proceduresTxt">
+		<h2>Representation Fund Procedures</h2>
+		<ol class="listText">
+			<li>Submit the “ORF Preliminary Approval Request” form to Charleston Brooks, explaining any anticipated 
+				needs for the supplemental funds to ensure availability of monies prior to expenditure.
+			</li>
+			<li>Consult the Domestic Representation Guidelines handbook, to ensure the request falls within the established guidelines. 
+				<a href="http://rm.m.state.sbu/RMDocumentLibrary/Domestic%20Representation%20Guidelines%20FY2012-FY2013.pdf">ORF Guidelines</a>
+			</li>
+			<li>Once the event/action has taken place, complete the reimbursement form for IRM Representation Fund. 
+				The reimbursement form “must” have all original receipts/ invoices and complete guest lists attached 
+				identifying the company/organization the guest represents.
+			</li>
+			<li>Once the review of the submitted documentation for allowable expenditures has been approved, a check for reimbursement will be generated.</li>
+		</ol>
+		<div class="readable-text">
+			<p>Please be advised any invoices submitted without prior approval will require authorization from Patricia Lacina, DCIO.</p>
+			<p><b>*Even after a reimbursement has been made, no claim is considered final until after RM/CFO reviews the quarterly reports.</b></p>
+			<input type="checkbox" id="proceduresChk"/>I have read the procedures.<br />
+			<button type="button" style="border-radius: 5px;"id="clrProcedures">Go to Request Form</button>		
+		</div>
+	</div>
+</body>
+</html>

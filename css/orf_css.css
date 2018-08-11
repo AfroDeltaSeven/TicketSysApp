@@ -1,0 +1,544 @@
+﻿label {
+	font-weight: bold;
+}
+input, textarea, select {
+	font-size: 12px; 
+	font-family: helvetica, arial, verdana; 
+}
+input[type=text], input[type=password], input.text, input.title, textarea {
+	background-color: #fff;
+	border: 1px solid #bbb;
+}
+input[type=text]:focus, input[type=password]:focus, input.text:focus, input.title:focus, textarea:focus {
+	border-color: #666;
+}
+select {	
+	background-color: #fff;
+	border-width: 1px;
+	border-style: solid;
+}
+input[type=text], input[type=password], input.text, input.title, textarea, select {
+	/*margin: 0.5em 0;*/
+}
+input.text, input.title {
+	width: 300px;
+	padding-top: 5px;
+	padding-left: 5px;
+	padding-right: 5px;
+	padding-bottom: 5px;
+}
+input.title {
+	font-size: 1.5em;
+}
+textarea {
+	width: 390px;
+	height: 100px;
+	padding-top: 5px;
+	padding-left: 5px;
+	padding-right: 5px;
+	padding-bottom: 5px; 
+	resize: none;
+}
+
+#amtHeader {
+	position: relative;
+	float: left;
+	left: 160px;
+}
+#approveReject {
+	display: block;
+}
+#btns {
+	width: 275px;
+	position: relative;
+	left: 15px;
+	display: none;
+}
+/*#checkAmount {
+	display: none;
+}
+#checkNumber {
+	display: none;
+}*/
+#chkInfo {
+	display: none;
+}
+#clrProcedures {
+	position: relative;
+	top: 10px;
+	display: none;
+	margin-bottom: 10px;
+}
+#eventStartDate {
+	float: left;
+	margin-right: 10px;
+	width: 160px;	
+}
+#eventStartTime {
+	float: left;
+}
+#eventEndDate {
+	float: left;
+	margin-right: 10px;
+	width: 160px;
+}
+#eventEndTime {
+	float: left;
+}
+#filters {
+	padding-top: 5px;
+}
+#form-container-new {
+	width: 830px;
+	margin: 0 auto;		
+	color: #444;
+}
+#form-container-edit {
+	width: 830px;
+	margin: 0 auto;		
+	color: #444;
+	background: #ebf5fc;
+	border: 1px solid #98cbed;
+	border-radius: 24px;
+}
+#form-main h1 {
+	font-family: century gothic;
+	font-weight: bold;
+	font-size: 34px;
+	color: #104B7D;
+	margin: 0;
+}
+#label-cntnr {
+	padding-top: 10px;
+	padding-left: 10px;
+	padding-right: 10px;
+	padding-bottom: 10px;
+}
+#main-content {
+	display: none;
+}
+#main-container {
+	font-family: arial;
+	font-size: 13px;
+	display: none;
+}
+#nameHeader {
+	position: relative;
+	float: left;
+	left: 80px;
+}
+#no-access {
+	display: none;
+	font-size: 14pt;
+	color: black;
+	position: relative;
+	left: 300px;
+	top: 50px;
+}
+#no-events {
+	display: none;
+	position: relative;
+	left: 625px;
+	top: 20px;
+}
+#next {
+	position: relative;
+	left: 870px;
+	float: left;
+}
+#next:hover {
+	color: #0072BC;
+}
+#previous {
+	position: relative;
+	left: 655px;
+	float: left;
+}
+#previous:hover {
+	color: #0072BC;
+}
+#proceduresTxt {
+	position: relative;
+	left: 200px;
+	width: 75%;
+	display: none;
+}
+#receiptDiv {
+	display: none;
+}
+#rejectDecision {
+	display: none;
+}
+#form-main div:nth-of-type(3)#rqstOffice {
+	padding-right: 250px;
+	-webkit-border-horizontal-spacing: 0px;
+	-webkit-border-vertical-spacing: 0px;
+	height: 33px;
+}
+/*
+No... as a result, this made it so some users could not scroll down to the submit button.
+body #s4-workspace {
+	overflow: hidden;
+}
+*/
+#tableDiv {
+	width: 97%;
+}
+#typeHeader {
+	position: relative;
+	float: left;
+	left: 210px;
+}
+#viewReqBtn {
+	display: none;
+	float: left;
+	margin-right: 5px;
+}
+.append-1 {
+	padding-right:40px;
+}
+.append-7 {
+	padding-right:280px;
+}
+.btn {
+	display: inline-block;
+	padding-top: 6px;
+	padding-bottom: 6px;
+	padding-left: 12px;
+	padding-right: 12px;
+	margin-bottom: 0;
+	font-size: 14px;
+	font-weight: normal;
+	line-height: 1.42857143;
+	text-align: center;
+	white-space: nowrap;
+	vertical-align: middle;
+	-ms-touch-action: manipulation;
+	touch-action: manipulation;
+	cursor: pointer;
+	-webkit-user-select: none;
+	-moz-user-select: none;
+	-ms-user-select: none;
+	user-select: none;
+	background-image: none;
+	border: 1px solid transparent;
+	border-radius: 4px;
+}
+.btn-primary {
+	color: #fff;
+	font-weight: bold;
+	background-color: #337ab7;
+}
+.btn-primary:focus,
+.btn-primary.focus {
+	color: #fff;
+	background-color: #286090;
+	border-color: #122b40;
+}
+.btn-primary:hover {
+	color: #fff;
+	background-color: #286090;
+	border-color: #204d74;
+}
+.btn-group-sm > .btn,
+.btn-sm {
+	padding:5px 10px;
+	font-size:12px;
+	line-height:1.5;
+	border-radius:3px
+}
+.btn-xs,
+.btn-group-xs > .btn {
+	padding-top: 1px;
+	padding-bottom: 1px;
+	padding-left: 5px;
+	padding-right: 5px;
+	font-size: 12px;
+	line-height: 1.5;
+	border-radius: 3px;
+}
+.btn-xs .badge,
+.btn-group-xs > .btn .badge {
+	top: 0;
+	padding-top: 1px;
+	padding-bottom: 1px;
+	padding-left: 5px;
+	padding-right: 5px;
+}
+.navbar-btn.btn-xs {
+	margin-top: 14px;
+	margin-bottom: 14px;
+}
+.boxShadow {
+	box-shadow: 1px 1px 1px 1px #aaa;
+}
+.boxSpacing {
+	padding-top: 10px;
+	padding-bottom: 10px;
+	/*padding-left: 0px;
+	padding-right: 0px;*/
+}
+.cancelbtn, .savebtn, .printBtn {
+	width: 160px;
+	padding-top: 6px;
+	padding-bottom: 6px;
+	padding-left: 6px;
+	padding-right: 6px;
+	font-family: "century gothic";
+	text-transform: uppercase;
+	font-weight:bold;
+}
+.cancelbtn {
+	background: #ed7669;
+	border: 1px solid #d62c1a;
+	color: #54110a;
+}
+.cancelbtn:hover {
+	background: #d62c1a;
+	color: #fceceb;
+	cursor: pointer;
+}
+.col-md-6 {
+	position: relative;
+	min-height: 1px;
+	padding-right: 15px;
+	padding-left: 15px;
+	float: left;
+	width: 50%;
+}
+.content-box {
+	width: 790px;
+	margin: 0 auto;
+	display: block;
+}
+.content-box:after {
+	content: "\0020";
+	display: block;
+	height: 0;
+	clear: both;
+	visibility: hidden;
+	overflow: hidden;
+}
+.custom-files-upload {
+	/*border: 2px dashed #ccc;*/
+	box-sizing: border-box;
+	/*padding: 0.5em;*/
+	margin: 0.5em 0;
+	text-align: center;
+}
+.custom-files-upload ul {
+	text-align: left;
+}
+.custom-files-upload ul li {
+	margin: 0.4em 0;
+}
+.custom-files-upload ul li input[type="file"] {
+	display: none;
+}
+.custom-files-upload ul li span.custom-file-remove {
+	margin-right: 0.5em;
+	cursor: pointer;	
+	display: inline-block;
+	vertical-align: bottom;
+}
+.dateBoxWidth{
+	width: 50px;
+}
+.dwnldBtn {
+	position: relative;
+	left: 3.5em;
+}
+.deleteBtn {
+	position: relative;
+	/*float: left;*/
+	left: 10px;
+}
+.deleteBtnAdm {
+	position: relative;
+	float: left;
+	left: 47px;
+}
+.decisionBox {
+	border-radius: 10px;
+}
+div.append-bottom, .append-bottom {
+	margin-bottom:1.5em;
+}
+div.box {
+	/*position: relative;
+	left: 100px;*/
+	border-style: solid;
+	border-width: 2px;
+	padding-bottom: 10px;
+	padding-left: 10px;
+	padding-right: 10px;
+	width: 80%;
+}
+div.inner-box {
+	padding-bottom: 15px;
+}
+div.prepend-top, .prepend-top {
+	margin-top:1.5em;
+}
+.file-name, file-name-adm {
+	margin-left: 10px;
+}
+.file-name-adm {
+	float: left;
+}
+.file-type {
+	margin-left: 40px;
+	float: left;
+}
+.form-main h1 {
+	margin-bottom: 10px;
+}
+.form-main h2 {
+	font-size: 18px;
+	margin-top:10px;
+	margin-bottom: 8px;
+	border-bottom: 2px solid #104B7D;
+	color: #104B7D;
+}
+.fonts {
+	font-size: 8pt;
+	font-family: verdana, arial, helvetica, sans-serif;
+}
+.gstDwnldBtn {
+	position: relative;
+	left: 1.5em;	
+}
+.headers {
+	color: #0072BC;
+	/*background-color: #d8d8d8;*/
+}
+.last {
+	margin-right:0;
+}
+.listText {
+	font-size: 12pt;
+}
+.moneyBox {
+	/*float: left;*/
+	margin-left: 25px;
+}
+.money-spacing {
+	position: relative;
+	float: left;
+	left: 25px;
+}
+.prepend-1 {
+	padding-left:40px;
+}
+.prepend-5 {
+	padding-left:200px;
+}
+.printBtn {
+	background: #3646f7;
+	border: 1px solid #1933d6;
+	color: #fff;
+}
+.printBtn:hover {
+	background: #7719d6;
+	color: #fff;
+	border: 1px solid #1933d6;	
+}
+.prev-next-btn {
+	float: left;
+	width: 100px;
+	height: 25px;
+}
+.readable-text {
+	font-size: 10pt;
+}
+.savebtn {	
+	background: #2ecc71;
+	border: 1px solid #25a25a;
+	color: #0e3c21;
+}
+.savebtn:hover {
+	background: #25a25a;
+	color: #ebfaf2;
+	cursor: pointer;
+}
+.span-5, .span-6, .span-6-adm, .span-18, .span-20 {
+	float:left;
+	margin-right:10px;
+}
+.span-5 {
+	width: 190px;
+}
+.span-6 {
+	width:225px;
+}
+.span-6-adm {
+	width: 230px;
+}
+.span-18 {
+	width: 710px;
+}
+.span-20 {
+	width:790px;
+	margin-right:0;
+}
+input.span-5, textarea.span-5, input.span-6, input.span-6-adm, textarea.span-6 , input.span-18, textarea.span-18, input.span-20, textarea.span-20 {
+	border-left-width:1px;
+	border-right-width:1px;
+	padding-left:5px;
+	padding-right:5px;
+}
+input.span-5, textarea.span-5 {
+	width: 178px;
+}
+input.span-6, input.span-6-adm, textarea.span-6 {
+	width: 180px;
+}
+input.span-18, textarea.span-18 {
+	width: 698px;
+} 
+input.span-20, textarea.span-20 {
+	width:778px;
+}
+.table {
+	border-collapse: collapse !important;
+	width: 100%;
+	max-width: 100%;
+	margin-top: 10px;
+}
+.rowHover:hover {
+	color: #000;
+}
+.table > thead > tr > th,
+.table > tbody > tr > th,
+.table > tfoot > tr > th,
+.table > thead > tr > td,
+.table > tbody > tr > td,
+.table > tfoot > tr > td {
+	padding-top: 8px;
+	padding-bottom: 8px;
+	padding-left: 8px;
+	padding-right: 8px;
+	line-height: 1.42857143;
+	vertical-align: top;
+	/*border-top: 1px solid #ddd;*/
+}
+.table > thead > tr > th {
+	vertical-align: bottom;
+	border-bottom: 2px solid #ddd;
+}
+.table > caption + thead > tr:first-child > th,
+.table > colgroup + thead > tr:first-child > th,
+.table > thead:first-child > tr:first-child > th,
+.table > caption + thead > tr:first-child > td,
+.table > colgroup + thead > tr:first-child > td,
+.table > thead:first-child > tr:first-child > td {
+	border-top: 0;
+}
+.table > tbody + tbody {
+	border-top: 2px solid #ddd;
+}
+.view-edit-btn {
+	position: relative;
+	left: 35px;
+	top: 4px;
+}

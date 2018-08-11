@@ -1,0 +1,1666 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:mso="urn:schemas-microsoft-com:office:office" xmlns:msdt="uuid:C2F41010-65B3-11d1-A29F-00AA00C14882">
+
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+	<title>Official Representation Funds Request - Admin</title>
+	
+    <link rel="stylesheet" type="text/css" href="http://irm.m.state.sbu/sites/bmp/SPO/FMD/AMS/web/html/ORF/css/page_loader.css" />
+    <link rel="stylesheet" type="text/css" href="http://irm.m.state.sbu/sites/bmp/SPO/FMD/AMS/web/html/ORF/css/orf_css.css" />
+	<link rel="stylesheet" type="text/css" href="http://irm.m.state.sbu/sites/bmp/SPO/FMD/AMS/web/html/ORF/css/orf_modal.css" />
+	<link rel="stylesheet" href="http://irm.m.state.sbu/sites/bmp/SPO/FMD/AMS/web/css/font-awesome-4.6.3/css/font-awesome.min.css"/>
+	<link rel="stylesheet" href="http://irm.m.state.sbu/sites/bmp/SPO/FMD/AMS/web/html/ORF/css/wait_loader.css"/>
+	
+    <script type="text/javascript" src="http://irm.m.state.sbu/sites/bmp/SPO/FMD/AMS/web/js/jquery.min.js"></script>
+    <script type="text/javascript" src="http://irm.m.state.sbu/sites/bmp/SPO/FMD/AMS/web/js/jquery-ui.min.js"></script>
+    <script type="text/javascript" src="http://irm.m.state.sbu/sites/bmp/SPO/FMD/AMS/web/js/SPServices/jquery.SPServices.min.js"></script>
+    <script type="text/javascript" src="http://irm.m.state.sbu/sites/bmp/SPO/FMD/AMS/web/js/Bootstrap/bootstrap-3.3.7-dist/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="http://irm.m.state.sbu/sites/bmp/SPO/FMD/AMS/web/js/UserViewInfo.js"></script>
+
+    <!--[if IE]>
+    	<script type="text/javascript" src="http://irm.m.state.sbu/sites/bmp/SPO/FMD/AMS/web/dependencies/lastIndexOf_Polyfill.js"></script>
+	<![endif]-->
+    
+	<script type="text/javascript">
+		/**
+		 * This function stores all global veriables used in the application
+		 * @global
+		 * @returns {Object}
+		 * @param {array} list - gets the list which holds all the events
+		 * @param {string} currID - the current ID of the event being edited
+		 * @param {string} setCurrID - sets the ID of the event being edited
+		 * @param {array} setList - sets the list which holds all of the events
+		 * @param {number} count - makes sure that the row IDs for expense items are unique
+		 * @param {number} increment - incremens the count variable
+		 * @param {string} webUrl - where all the recources for the application are
+		 * @param {string} libName - the document library name
+		 * @param {string} listName - the list name
+		 * @param {file} files - gets all the relevant files' information
+		 * @param {file} newFiles - adds new file information
+		 * @param {string} setReceipt - sets the receipt information for an event
+		 * @param {string} setUserName - sets the username of the current user
+		 * @param {number} setCurrAmount - sets the amount of money for an expense item
+		 * @param {Object} emptyList - empties the list
+		 */
+		var globalVars = (function() {
+			var allFiles = [],
+				listItems = [],
+				currItemID,
+				webUrl = "http://irm.m.state.sbu/sites/bmp/SPO/FMD/AMS",
+				libName = "ORF_Document_Library",
+				queryString = "?",
+				listName = "ORF_Records",
+				receiptUrl = "http://irm.m.state.sbu/sites/bmp/SPO/FMD/AMS/web/html/ORF/html/ORF_Receipt.html",
+				count = 0,
+				prevIndex = 0,
+				userOffices = [];
+			
+			function fetchListItems() {
+				return listItems;
+			}
+			
+			function setListItems(listItem) {
+				listItems.push(listItem);
+				return;
+			}
+			
+			function emptyList() {
+				listItems = [];
+				return;
+			}
+			
+			function getCurrID() {
+				return currItemID;
+			}
+			
+			function setCurrID(ID) {
+				currItemID = ID;
+				return;
+			}
+			
+			function setReceipt(receipt) {
+	    		receiptObj = receipt;
+	    		queryString += "name=" + receipt.eventName + 
+	    			"&time=" + receipt.startTime + "&amount=" +
+	    			receipt.reqAmt + "&check=" + receipt.chkNum; 
+	    		return;
+	    	}
+			
+			function getWebUrl() {
+				return webUrl;
+			}
+			
+			function getLibName() {
+				return libName;
+			}
+			
+			function getListName() {
+				return listName;
+			}
+			
+			function getCount() {
+				return count;
+			}
+			
+			function incrCount() {
+				count++;
+				return;
+			}
+			
+	    	function newFile(rowID, file, fileType) {
+   				allFiles.push({
+	            	ID: rowID,
+	            	file: file,
+	            	type: fileType,
+	            	amount: ""  					
+   				});
+	    		return;
+	    	}
+	    	
+	    	function getFiles() {
+	    		return allFiles;
+	    	}
+	    	
+	    	function getPrevIndex() {
+	    		return prevIndex;
+	    	}
+	    	
+	    	function getOffices() {
+	    		return userOffices;
+	    	}
+	    	
+			function setCurrAmount(elementID, newVal, rowID) {
+				var arrayLngth = allFiles.length;
+				for (var index = 0; index < arrayLngth; index++) {
+					if (allFiles[index].ID === rowID) {
+						allFiles[index].amount = newVal;
+					}
+				}
+				return;			
+			}
+			
+			function setPrevIndex(index) {
+				prevIndex = index;
+				return;
+			}
+			
+			function setOffices(offices) {	
+				userOffices = offices;
+				return;
+			}
+			
+			function getRecUrl() {
+	    		return receiptUrl + queryString;
+	    	}
+			
+			function orderEvents() {
+				listItems.sort(function(a, b) {
+					return b.order - a.order;
+				}); 
+			}
+
+			return {
+				list: function() { return fetchListItems(); },
+				setList: function(listItem) { return setListItems(listItem); },
+				currID: function() { return getCurrID(); },
+				setCurrID: function(ID) { return setCurrID(ID); },
+				emptyList: function() { return emptyList(); },
+				webUrl: function() { return getWebUrl(); },
+				libName: function() { return getLibName(); },
+				listName: function() { return getListName(); },
+				count: function() { return getCount(); },
+				increment: function() { return incrCount(); },
+				recUrl: function() { return getRecUrl(); },
+				files: function() { return getFiles(); }, 
+				newFiles: function(rowID, file, fileType) { return newFile(rowID, file, fileType); },
+				setReceipt: function(receipt) { return setReceipt(receipt); },
+				setAmount: function(elementID, newVal, rowID) { return setCurrAmount(elementID, newVal, rowID); },
+				prevIndex: function() {  return getPrevIndex(); },
+				setPrevIndex: function(index) { return setPrevIndex(index); },
+				getOffices: function() { return getOffices(); },
+				setOffices: function(offices) { return setOffices(offices); },
+				order: function() { return orderEvents(); }
+			}
+		})(globalVars || {});
+
+		/**
+		 * This function checks the permissions of the current user. If the user is part of 
+		 * the proper group, they are allowed to view the View All Requests button
+		 * @public
+		 * @returns {Promise}
+		 */ 		
+		function chkGroups() {
+			return $.Deferred(function(dfd) {
+				$().SPServices({
+					operation: "GetGroupCollectionFromUser",
+					userLoginName: $().SPServices.SPGetCurrentUser(),
+					async: false,
+					completefunc: function(xData, Status) {
+						if(($(xData.responseXML).find("Group[Name='SPO FMD Owners']").length === 1) || 
+							($(xData.responseXML).find("Group[Name='SPO FMD Members']").length === 1)) {
+							document.getElementById('waitDiv').style.display = 'none';
+							document.getElementById('btns').style.display = 'block';
+							document.getElementById('main-content').style.display = 'block';
+						} else {
+							document.getElementById('waitDiv').style.display = 'none';
+							document.getElementById('no-access').style.display = 'block';
+						}
+					}			
+				}).done(function() {
+					console.log("Users' groups checked!");
+					dfd.resolve();
+				}).fail(function() {
+					dfd.reject("Could not check users' groups...\nCheck the users' credentials manually.");
+				});			
+			}).promise();
+		}
+
+		/**
+		 * This function filters the table view based on its decision
+		 * @public
+		 * @param {string} decision - the status of items that the user wants to see
+		 */		
+		function filter(decision) {
+			var camlQuery = "";
+								
+			if (decision !== "All") {
+				camlQuery = "<Query><Where><Eq><FieldRef Name='Request_Decision'/><Value Type='Text'>" +
+					decision + "</Value></Eq></Where></Query>";			
+			}
+			return $.Deferred(function(dfd) { 
+				globalVars.emptyList();
+				$.when(getListItems(camlQuery)).done(function(listMsg) {
+					tablePageView("").done(function(tbleMsg) {
+						console.log(tbleMsg);
+						dfd.resolve();
+					});
+				}).fail(function(failMsg) {
+					console.log(failMsg);
+					dfd.reject();
+				});					
+			}).promise();					
+		}
+
+		/**
+		 * sets the locations of the nav buttons at the top of the page
+		 * @public
+		 */		
+		function bindBtns() {
+			return $.Deferred(function(dfd) {
+				/** Placeholder HTML polyfill **/
+				$('[placeholder]').focus(function() {
+				    var input = $(this);
+				    if (input.val() == input.attr('placeholder')) {
+				        input.val('');
+				        input.removeClass('placeholder');
+				    }
+				}).blur(function() {
+				    var input = $(this);
+				    if (input.val() == '' || input.val() == input.attr('placeholder')) {
+				        input.addClass('placeholder');
+				        input.val(input.attr('placeholder'));
+				    }
+				}).blur();
+				$('[placeholder]').parents('form').submit(function() {
+				    $(this).find('[placeholder]').each(function() {
+				        var input = $(this);
+				        if (input.val() == input.attr('placeholder')) {
+				            input.val('');
+				        }
+				    })
+				});
+				$('#newReqBtn').bind('click', function () {
+					window.location.replace('http://irm.m.state.sbu/sites/bmp/SPO/FMD/AMS/Pages/ORF-Submission-Form.aspx');
+				});	
+				$('#chkReady input[type=checkbox]').click(function(){
+					if ($(this).is(':checked')) {
+						document.getElementById("chkInfo").style.display = "block";
+					} else {
+						document.getElementById("chkInfo").style.display = "none";
+					}    				
+    			});				
+				$('#btncancel').bind('click', function () {
+					var modal = document.getElementById('modal-cntnr');
+					document.getElementById('guestFilesList').innerHTML = "";
+					document.getElementById('expFilesList').innerHTML = "";
+					document.getElementById('rejectDecision').style.display = "none";
+					modal.style.display = "none";
+				});
+				$('#homeBtn').bind('click', function() {
+	            	window.location.replace('http://irm.m.state.sbu/sites/bmp/SPO/FMD/AMS/Pages/ORF-Submission.aspx');
+				});
+	            $('#status').bind('change', function() {
+	            	var statusChoice = document.getElementById('status').value;
+	            	
+	            	switch(statusChoice) {
+	            		case "Request Approved":
+		 					document.getElementById('rejectDecision').style.display = "none";
+		 					document.getElementById('reject_reason').value = "";
+							document.getElementById('chkInfo').style.display = "block";
+	            			break;
+	            		case "Request Denied":
+							document.getElementById('rejectDecision').style.display = "block";
+							document.getElementById('reject_reason').value = "";
+							document.getElementById('chkInfo').style.display = "none";
+							document.getElementById('check_number').value = "$0.00";
+							document.getElementById('check_amount').value = "";
+	            			break;
+	            		default:
+							document.getElementById('rejectDecision').style.display = "none";
+							document.getElementById('chkInfo').style.display = "none";
+	            			break;
+	            	}
+	            });
+				$('#check_amount').bind('change', function(){
+					var $input = $(this).val();
+					var $ID = $(this).attr('id');
+					validateMoney($ID, $input);
+				});
+				$("#btnsave").bind('click', function() {
+					if (validate(document.getElementById('status').value)) {
+						document.getElementById('modal-cntnr').style.display = 'none';
+						document.getElementById('waitDiv').style.display = "block";
+						(update()).then(beginSavingFiles()).done(function() {
+							location.reload(true);						
+						}).fail(function() {
+							document.getElementById('pageLoader').style.display = "none";
+							document.getElementById('errTxt').style.display = "block";
+							document.getElementById('errTxt').innerHTML = "Your request cannot be completed at this time..." +
+								"Please seek out your SharePoint admin.";						
+						});				
+					}
+				});
+				$('#descFilter').bind('change', function() {
+					$('#dataTable').html("");
+					document.getElementById('dataTable').innerHTML = "";
+					filter(document.getElementById('descFilter').value);
+					chkForEvents();
+				});
+				$('#printReceipt').bind('click', function() {
+					window.open(globalVars.recUrl(), '_blank');
+				});
+				$('#btnAddFile').bind('click', function() {
+					addExpFile();
+				});
+				$('#previous').bind('click', function() {
+					tablePageView("previous");
+				});
+				$('#next').bind('click', function() {
+					tablePageView("next");
+				});
+				console.log("Elements successfully binded!");
+				dfd.resolve();			
+			}).promise();		
+			return;
+		}
+
+		/** 
+		 * validates the user inputted money
+		 * @public
+		 * @param {string} money - the money to be validated
+		 * @param {string} currElement - the current element
+		 * @returns {boolean} 		
+		 */		
+        function validateMoney(elementID, money) {
+			var dollarSign = /^\u0024/g;
+        	var hasDollarSign = false;
+			var moneyPattern = /(?=.)^\$?(([1-9][0-9]{0,2}([0-9]|,[0-9]{3})*)|0)?(\.[0-9]{1,2})?$/;
+			
+			if (String(money).match(dollarSign) !== null) {
+				hasDollarSign = true;
+			}
+									
+			if ((String(money).match(moneyPattern) !== null)) {
+				document.getElementById(elementID).value = (hasDollarSign === true ? money : "$" + money);
+				return true;
+			} else {
+				document.getElementById(elementID).value = "$0.00";
+				return false;
+			}
+        }
+
+		/**
+		 * This function updates the total requested amount in ths SP list
+		 * @public 
+		 * @returns {Promise}
+		 */      
+		function updateTotalRqstAmt() {
+			var totalAmount = document.getElementById('totalRqstAmt');
+			var list = document.getElementById('expFilesList');
+			var listItems = list.getElementsByClassName('money-spacing');
+			var listLength = listItems.length;
+			var dollarSign = /^\u0024/g;
+			var newAmount = 0;			
+			var hasDollarSign = 0;
+			var newAmount = 0;	
+			var decimalAmt = ".00";
+									
+			for (var index = 0; index < listLength; index++) {
+				var currValue = String(listItems[index].value) === "" ? "$0" : String(listItems[index].value);
+				currValue = parseFloat(currValue.slice(1, currValue.length));
+				newAmount += currValue;
+			}
+			
+			var strAmt = String(newAmount);
+			var hasDecimal = strAmt.indexOf('.') === -1 ? 0 : 2;
+			var mnyLength = strAmt.length;
+						
+			if (hasDecimal !== 0) {
+				decimalAmt = String(newAmount).slice((mnyLength-hasDecimal), mnyLength);				
+				if (decimalAmt.indexOf('.') === -1) {
+					decimalAmt = '.' + decimalAmt;
+				} else {
+					decimalAmt += '0';
+				}
+			}
+						
+			if (strAmt.slice(0, (mnyLength-hasDecimal)).indexOf('.') !== -1) {
+				hasDecimal++;
+			}
+			
+			switch ((mnyLength-hasDecimal)) {
+				case 4:
+					strAmt = strAmt.slice(0,1) + ',' + strAmt.slice(1,mnyLength-hasDecimal) + decimalAmt;
+					break;
+				case 5:
+					strAmt = strAmt.slice(0,2) + ',' + strAmt.slice(2,mnyLength-hasDecimal) + decimalAmt;
+					break;
+				case 6:
+				case 7:
+					strAmt = strAmt.slice(0,3) + ',' + strAmt.slice(3,mnyLength-hasDecimal) + decimalAmt;
+					break;						
+			}
+																				
+			totalAmount.value = ("$" + strAmt);				
+			
+			return $.Deferred(function(dfd) {
+				$().SPServices({
+					operation: "UpdateListItems",
+					batchCmd: "Update",
+					webURL: globalVars.webUrl(),
+					listName: globalVars.listName(),
+					ID: globalVars.currID(),
+					async: false,
+					valuepairs: [["Request_Amount", newAmount]],
+					completefunc: null
+				}).done(function() {
+					console.log("Item ID: " + globalVars.currID() + " in " + globalVars.listName() + " was changed!");
+					dfd.resolve();
+				}).fail(function() {
+					dfd.reject("Item ID: " + globalVars.currID() + " in " + globalVars.listName() + " wasn't changed...");
+				});		
+			}).promise();
+	 	}
+
+		/**
+		 * formats the dates from SP tobe more human readable
+		 * @public
+		 * @param {string} dateTime - a string containing when the event will take place
+		 * @returns {string} dateTime - a string containing when the event will take place
+		 */      		
+		function formatDates(dateTime) {
+			var date = String(dateTime).split(" ")[0];
+			var parsedDate = date.split("-");
+			var time = String(dateTime).split(" ")[1];
+			var intTime = parseInt(time.split(":")[0], 10);
+			var newDateTime = "";
+					
+			if (intTime > 12) {
+				newDateTime = parsedDate[1] + '/' + parsedDate[2] + '/' + parsedDate[0] + 
+					" @ " + (intTime - 12) + ":" + time.split(":")[1] + "PM";
+			} else if (intTime < 12) {
+				newDateTime = parsedDate[1] + '/' + parsedDate[2] + '/' + parsedDate[0] + 
+					" @ " + time.split(":")[0] + ":" + time.split(":")[1] + "AM";
+			} else {
+				newDateTime = parsedDate[1] + '/' + parsedDate[2] + '/' + parsedDate[0] + 
+					" @ " + time.split(":")[0] + ":" + time.split(":")[1] + "PM";			
+			}
+			
+			return newDateTime;
+		}
+		
+		/**
+		 * This function updates the amount of money in the document library
+		 * @public
+		 * @param {string} fileName - ths file name of the element in the document library to be updated
+		 * @param {number} itemVal - the length of the string that contains the amount		
+		 */		
+		function updateListItem(fileName, itemVal) {
+			var dollarSign = /^\u0024/g;
+			var hasDollarSign = (String(itemVal).match(dollarSign) !== null) ? 1 : 0;
+
+			var amount = itemVal.slice(hasDollarSign, itemVal.length);
+			amount = parseFloat(amount);
+			var updateID;
+			
+			return $.Deferred(function(dfd) {
+				$().SPServices({
+					async: false,
+					operation: "GetListItems",
+					webURL: globalVars.webUrl(),
+					listName: globalVars.libName(),
+					CAMLQuery: "<Query><Where><Eq><FieldRef Name='LinkFilenameNoMenu'/><Value Type='Text'>"+fileName+"</Value></Eq></Where></Query>",
+	                CAMLViewFields: "<ViewFields>" +
+	                    "<FieldRef Name='ID' />" +
+	                    "</ViewFields>",
+					completefunc: function(xData, Status){
+						$(xData.responseXML).SPFilterNode("z:row").each(function(){
+							updateID = $(this).attr("ows_ID");
+						});
+					}
+				}).done(function() {
+					$().SPServices({
+						operation: "UpdateListItems",
+						batchCmd: "Update",
+						webURL: globalVars.webUrl(),
+						listName: globalVars.libName(),
+						ID: updateID,
+						async: false,
+						valuepairs: [["Amount", amount]],
+						completefunc: null
+					}).done(function() {
+						console.log("Amount successfully updated for ID: " + updateID);
+						dfd.resolve();
+					}).fail(function() {
+						dfd.reject("The new amount for ID: " + updateID + " wasn't updated...\nCheck the library URL and the ID.");
+					});			
+				});			
+			}).promise();
+		}
+
+		/** 
+		 * Deletes a potential event from the array list
+		 * @public
+		 * @param {string} rowID - where the file is in the files list		
+		 */				
+		function deleteItem(rowID) {
+			var arrayLngth = globalVars.files().length;
+			for (var index = (arrayLngth - 1); index >= 0; index--) {
+				if (globalVars.files()[index].ID === rowID) {
+					globalVars.files().splice(index, 1);
+					updateTotalRqstAmt();
+				}			
+			}
+			return;
+		}
+		
+		/** 
+		 * Creates the expense attachments HTML list item
+		 * @public
+		 * @returns {Object} input - the file object
+		 * @param {string} input.type - file
+		 */
+        function addExpFile() {
+        	var rowID = "row-" + globalVars.count();
+            var $list = $('#expFilesList');
+            var input = document.createElement('input');
+            input.setAttribute('type', 'file');
+            var $input = $(input);
+            var li = document.createElement('li');
+            li.style.marginTop = "7px";
+            li.style.marginBottom = "7px";
+            var $li = $(li);
+            $li.append($input);
+            
+            var deleteBtn = document.createElement('button');
+            deleteBtn.style.borderRadius = "5px";
+            deleteBtn.id = "btn-" + globalVars.count();
+            deleteBtn.innerHTML = "Delete";
+            deleteBtn.title = "Click to remove";
+            deleteBtn.setAttribute('type', 'button');
+            deleteBtn.className = "deleteBtnAdm";
+
+            $input.bind('change', function(ev) {
+           		_file = ev.target.files[0]; 
+	            globalVars.newFiles(rowID, _file, "Expense Item");
+	            
+	            var fileNameBox = document.createElement('input');
+	            fileNameBox.style.borderRadius = "5px";
+	            fileNameBox.value = _file.name;
+	            fileNameBox.innerHTML = _file.name;
+	            fileNameBox.id = "fileNameBox-" + globalVars.count();
+	            fileNameBox.className = "file-name-adm";
+	            fileNameBox.setAttribute('type', 'text');
+	            fileNameBox.readOnly = true;
+	            $li.append(fileNameBox);
+	           		            
+	        	var amountBox = document.createElement('input');
+	        	amountBox.style.borderRadius = "5px";
+	        	amountBox.id = "amtBox-" + globalVars.count();
+	        	amountBox.setAttribute('type', 'text');
+	        	amountBox.placeholder = "$0.00";
+	        	amountBox.value = "$0.00";
+	        	amountBox.className = "money-spacing";
+				$li.append(amountBox);
+
+	            $(amountBox).on('change', function() {
+					var $input = $(this).val();
+					var $ID = $(this).attr('id');
+					if (validateMoney(amountBox.id, $input)) {
+						globalVars.setAmount($ID, $input, rowID);
+						updateTotalRqstAmt();					
+					}
+	            });
+	            
+       			$li.append(deleteBtn);
+	       		$list.append($li);
+            });
+          
+            $(deleteBtn).on('click', function(ev) {
+                $li.remove();
+    	        deleteItem(rowID);
+                var items = $list.find('li');
+                updateTotalRqstAmt();
+                ev.stopPropagation();
+            });
+                     			
+            $input.click();
+            globalVars.increment();
+            return input;
+        }
+        
+		/**
+		 * Gives a unique file name to each of the files updated
+		 * @public 
+		 * @param {string} fileName	- the name of the file
+		 * @returns {string} fileName - the unique file name
+		 */
+		function uniqueFileName(fileName) {
+			var uniqueNumOne = (Math.floor(Math.random() * 50) + 1);
+			var uniqueNumTwo = (Math.floor(Math.random() * 200) + 1);
+			fileName = uniqueNumOne + "-" + uniqueNumTwo + "_" + fileName;
+			return fileName;
+		}
+ 
+		/**
+		 * This function uploads the file details after the supporting
+		 * file has been uploaded
+		 * @public
+		 * @param {string} fileName - the name of the file
+		 * @param {number} fileIndex - where the file info can be found in the array
+ 		 */  
+        function uploadFileDetails(fileName, fileIndex, fileID) {
+        	var eventName;
+        	var amount =  globalVars.files()[fileIndex].amount !== "" ? 
+        		globalVars.files()[fileIndex].amount.slice(1, globalVars.files()[fileIndex].amount.length) : 0;
+        	amount = parseFloat(amount);        	
+        	
+        	return $.Deferred(function(dfd) {
+				$().SPServices({
+					async: false,
+					operation: "GetListItems",
+					webURL: globalVars.webUrl(),
+					listName: globalVars.listName(),
+					CAMLQuery: "<Query><Where><Eq><FieldRef Name='ID'/><Value Type='Text'>"+globalVars.currID()+"</Value></Eq></Where></Query>",
+	                CAMLViewFields: "<ViewFields>" +
+	                    "<FieldRef Name='Event_Name' />" +
+	                    "</ViewFields>",
+					completefunc: function(xData, Status){
+						$(xData.responseXML).SPFilterNode("z:row").each(function(){
+							eventName = $(this).attr("ows_Event_Name");
+							
+							if (fileID === undefined) {
+			                    fileID = $().SPServices.SPGetLastItemId({
+			                        webURL: globalVars.webUrl(),
+			                        listName: globalVars.libName()
+			                    });						
+							}
+							console.log("The Current File ID: " + fileID);
+						});
+					}
+				}).done(function() {
+					$().SPServices({
+						operation: "UpdateListItems",
+						batchCmd: "Update",
+						webURL: globalVars.webUrl(),
+						listName: globalVars.libName(),
+						ID: fileID,
+						async: false,
+						valuepairs: [["Doc_ID", globalVars.currID()], ["Title", eventName],
+						 ["Amount", amount], ["File_Type", globalVars.files()[fileIndex].type]],
+						completefunc: null
+					}).done(function() {
+						console.log("Additional data for " + eventName + " successfully uploaded!");
+						dfd.resolve("Additional data for " + eventName + " successfully uploaded!");
+					}).fail(function() {
+						dfd.reject("Additional data for " + eventName + " wasn't uploaded...\nCheck the web url and/or item: " + fileID + " in " + globalVars.listName());
+					});		
+				}).fail(function() {
+					dfd.reject("An error occurred...\nCheck for ID: " + globalVars.currID() + " in " + globalVars.listName());
+				});       	
+        	}).promise();						
+        }
+        
+        /** 
+         * gets the file reader
+         * @public
+         * @param {Object} file - the file object to be read
+         * @returns {Promise}
+         */
+		var getFileBuffer = function(file) {
+			return $.Deferred(function(dfd) {
+				var reader = new FileReader();
+				
+				reader.onload = function(e) {
+				    dfd.resolve(e.target.result);
+				}
+				reader.onerror = function(e) {
+				    dfd.reject(e.target.error);
+				}
+				
+				reader.readAsArrayBuffer(file);			
+			}).promise();
+		};
+		
+		/**
+		 * uploads the file to the document library
+		 * @public
+		 * @param {Object} currFile - the file object
+		 * @param {number} fileIndex - where the details of the file are in the array
+		 * @returns {Promise}
+		 */		
+		function uploadFile(currFile, fileIndex) {
+			var fileName = uniqueFileName(currFile.name);			
+			return $.Deferred(function(dfd) {
+				getFileBuffer(currFile).done(function(buffer) {
+					$.ajax({
+						url: globalVars.webUrl() + '/_vti_bin/listdata.svc/' + globalVars.libName(),
+						type: 'POST',
+						processData: false,
+						contentType: currFile.type,
+						data: buffer,
+						headers: {
+							"Accept" : "application/json;odata=verbose",
+							"Slug" : globalVars.webUrl() + '/' + globalVars.libName() + '/' + fileName
+						}
+					}).done(function(result){					
+						uploadFileDetails(fileName, fileIndex, result.d.Id).done(function(doneMsg) {
+							dfd.resolve(doneMsg);
+						}).fail(function(errMsg) {
+							dfd.reject(errMsg);
+						});
+					}).fail(function(err){						
+						console.log("There was an error....");
+						console.log(err);
+						console.log("\nAttempting to recover..." );
+						uploadFileDetails(fileName, fileIndex, "undefined").done(function(doneMsg) {
+							dfd.resolve(doneMsg);
+						}).fail(function(errMsg) {
+							dfd.resolve(errMsg);
+						});
+					});			
+				});
+			}).promise();
+		}
+                
+		/**
+		 * uploads files one at a time
+		 * @public
+		 * @returns {Promise}
+		 */
+        function beginSavingFiles() {
+        	var fileArrIndex = globalVars.files().length;
+        	return $.Deferred(function(dfd) {
+        		if (fileArrIndex < 1) {
+        			dfd.reject("Please Include your Guest List(s) and Expense(s) Files...");
+        		} else {
+        			var promises = [];
+		        	for (var filesInd = 0; filesInd < fileArrIndex; filesInd++) {
+			        	promises.push(uploadFile(globalVars.files()[filesInd].file, filesInd));
+			        }
+			        $.when.apply($,promises).done(function(doneMsg) {
+			    		dfd.resolve(doneMsg); 		        	
+			        }).fail(function(errMsg) {
+			        	dfd.reject(errMsg); 	
+			        });
+        		}
+        	}).promise();	        
+        }
+		
+		/**
+		 * This function filters the table view based on their username and an items' decision
+		 * @public
+		 * @param {string} decision - the status of items that the user wants to see
+		 * @returns {Promise}
+		 */
+         function tablePageView(nextPrev) {
+         	return $.Deferred(function(dfd) {
+	         	var itemsPerPage = 10;
+	         	var listItems = globalVars.list();
+	         	var totalIndex = listItems.length;
+	         	var prevIndex = globalVars.prevIndex();
+	         	var arrayIndex = 0;
+				var currRow = 1; 
+		        var tableItems = document.getElementById('dataTable'); 
+		        var nextBtn = document.getElementById('next');
+		        var prevBtn = document.getElementById('previous');
+		        
+		        tableItems.innerHTML = "";
+		        		        
+		        function isEven() { 
+		        	return currRow % 2 == 0; 
+		        }
+		        
+				if (nextPrev === "next") {
+					arrayIndex = prevIndex + itemsPerPage;
+					if (arrayIndex > totalIndex) {
+						arrayIndex = arrayIndex - (arrayIndex - totalIndex);				
+					}					
+					if (arrayIndex === itemsPerPage) {
+						prevIndex = 0;				
+					}
+					globalVars.setPrevIndex(arrayIndex);					
+				} else if (nextPrev === "previous") { //todo
+					if (prevIndex % itemsPerPage === 0) {
+						arrayIndex = prevIndex;
+						prevIndex -= itemsPerPage;
+						globalVars.setPrevIndex(arrayIndex);
+					} else {
+						arrayIndex = prevIndex - (prevIndex % itemsPerPage);	
+						prevIndex -= itemsPerPage + (prevIndex % itemsPerPage);											
+						globalVars.setPrevIndex(arrayIndex-itemsPerPage);
+					}									
+				} else {
+					arrayIndex = itemsPerPage;
+					prevIndex = 0;
+					globalVars.setPrevIndex(arrayIndex); 		
+				}
+
+				if (arrayIndex > totalIndex) {
+					arrayIndex = totalIndex;
+					globalVars.setPrevIndex(arrayIndex); 
+				}
+				
+	         	if (arrayIndex !== totalIndex && totalIndex > itemsPerPage) {
+	         		nextBtn.style.display = "block";
+	         	} else {
+	         		nextBtn.style.display = "none";
+	         	}
+	         	if (prevIndex !== 0) {
+					prevBtn.style.display = "block";
+				} else {
+					prevBtn.style.display = "none";
+				} 
+				   	       
+	         	for (; prevIndex < arrayIndex; prevIndex++) {	         	
+	                var tableRow = document.createElement('tr');
+	                	                
+			        var view_edit = document.createElement('button');
+					view_edit.id = "btn-" + listItems[prevIndex].ID;
+					view_edit.style.borderRadius = "5px";
+			        view_edit.innerHTML = "View/Edit";
+					view_edit.value = listItems[prevIndex].ID;
+					view_edit.setAttribute('type', 'button');
+					view_edit.className = "view-edit-btn";
+			        tableRow.appendChild(view_edit);
+	
+		            $(view_edit).on('click', function() {
+						initEdit(this.value);           
+		            });
+	                
+	                tableRow.id = "row" + prevIndex;
+	                tableRow.className = "rowHover";
+	                tableRow.style.backgroundColor = isEven() ? "#fff" : "#ededed"; 
+	                tableItems.appendChild(tableRow);
+	            	
+	                var user_name = document.createElement('th');
+	                user_name.innerHTML = listItems[prevIndex].user_name;
+	                tableRow.appendChild(user_name);
+	
+	                var event_name = document.createElement('th');
+	                event_name.innerHTML = listItems[prevIndex].event_name;
+	                tableRow.appendChild(event_name);
+	                
+	                var event_loc = document.createElement('th');
+	                event_loc.innerHTML = listItems[prevIndex].event_loc;
+	                tableRow.appendChild(event_loc);
+	
+	                var start_time = document.createElement('th');
+	                start_time.innerHTML = listItems[prevIndex].start_time;
+	                tableRow.appendChild(start_time);
+	
+	                var end_time = document.createElement('th');
+	                end_time.innerHTML = listItems[prevIndex].end_time;
+	                tableRow.appendChild(end_time);            
+	                
+	                var req_desc = document.createElement('th');
+	                req_desc.innerHTML = listItems[prevIndex].req_desc;
+	                req_desc.style.color = "#000";
+	                req_desc.className = "decisionBox";
+	                
+	                switch(listItems[prevIndex].req_desc) {
+	                	case "User Submitted":
+	                		req_desc.style.backgroundColor = "#8cf442";
+	                		break;
+	                	case "Pending Approval":
+	                		req_desc.style.backgroundColor = "#f4e241";
+	                		break;
+	                	case "Request Approved":
+	                		req_desc.style.backgroundColor = "#42f456";
+	                		break;
+	                	case "Request Denied":
+	                		req_desc.style.backgroundColor = "#ff5454";
+	                		break;
+	                	default:
+	                		break;
+	                }
+	                tableRow.appendChild(req_desc); 
+	                currRow++;       		
+	         	}   
+	         	console.log("Table successfully created!");
+         		dfd.resolve();
+         	}).promise();
+         }
+
+		/**
+		 * This function makes sure that users do not forget to add data
+		 * to: chkNum, chkAmt, or reason depending on the status of an event
+		 * @public
+		 * @param {string} decision - the status of an event
+		 * @returns {boolean}
+		 */
+		function validate(decision) {
+		console.log("Checking for errors...");
+			var chkNum = document.getElementById('check_number');
+			var chkAmt = document.getElementById('check_amount');
+			var reason = document.getElementById('reject_reason');
+			var error = 0;
+			
+			console.log("Current status: " + decision);		
+			switch(decision) {
+				case "Request Approved":
+					if (chkNum.value === "") {
+						chkNum.style.backgroundColor = "#ff9e9e";
+						error++;
+					} else {
+						chkNum.style.backgroundColor = "#fff";
+					}
+					if (chkAmt.value === "$0.00" || chkAmt.value === "") {
+						chkAmt.style.backgroundColor = "#ff9e9e";
+						error++;
+					} else {
+						chkAmt.style.backgroundColor = "#fff";
+					}
+					break;
+				case "Request Denied":
+					if (reason.value === "") {
+						reason.style.backgroundColor = "#ff9e9e";
+						error++;
+					} else {
+						reason.style.backgroundColor = "#fff";
+					}
+					break;					
+				default:
+					document.getElementById('status').style.backgroundColor = "#ff9e9e";
+					break;
+			}
+			
+			if (error > 0) {
+				alert("Please provide an answer for the boxes highlighted in red");
+				return false;
+			} else {
+				return true;
+			}
+		}
+		
+		/**
+		 * This function updates the status of an event
+		 * @public
+		 * @returns {Promise}		
+		 */		
+		function update() {			
+			var checkAmt;
+			var decision = document.getElementById('status').value;
+			var rejectText = typeof document.getElementById('reject_reason').value === 'undefined' ? "None" : document.getElementById('reject_reason').value;
+			var checkNum = typeof document.getElementById('check_number').value === 'undefined' ? "None Assigned" : document.getElementById('check_number').value;
+			
+			if (typeof document.getElementById('check_amount').value === 'undefined' || document.getElementById('check_amount').value === "") {
+				checkAmt = "$0.00";
+			} else {
+				checkAmt = document.getElementById('check_amount').value;
+			}
+											
+			checkAmt = checkAmt.slice(1, checkAmt.length);
+			
+			return $.Deferred(function(dfd) {
+				$().SPServices({
+					operation: "UpdateListItems",
+		            listName: globalVars.listName(),
+		            webURL: globalVars.webUrl(),
+					ID: globalVars.currID(),
+					async: false,
+					valuepairs: [["Request_Decision", decision],["Disapproval_Reason", rejectText],
+								["Check_Number", checkNum],["Check_Amount", checkAmt]],
+					completefunc: null
+				}).done(function() {
+					console.log("List item " + globalVars.currID() + " has been successfully updated!");
+					dfd.resolve();
+				}).fail(function() {
+					dfd.reject("List item " + globalVars.currID() + " hasn't been updated...\nCheck the list URL and the list item.");
+				});			
+			}).promise();			
+		}
+
+		/**
+		 * This function updates the money of an event in the SP list
+		 * @public
+		 * @param {string} newFileMny - a string of the new amount of money	
+		 * @returns {Promise}	
+		 */		
+		function updateTotalMoney(newFileMny) { 
+			newFileMny = newFileMny.slice(1, newFileMny.length);
+			newFileMny = parseFloat(newFileMny);
+			var totalMoney;
+			
+			return $.Deferred(function(dfd) {
+		        $().SPServices({
+		            operation: "GetListItems",
+		            async: false,
+		            listName: globalVars.listName(),
+		            webURL: globalVars.webUrl(),
+		            CAMLViewFields: "<ViewFields>" +
+		                "<FieldRef Name='Request_Amount' />" +
+		                "</ViewFields>",
+					CAMLQuery: "<Query><Where><Eq><FieldRef Name='ID'/><Value Type='Text'>"
+							+ globalVars.currID() + "</Value></Eq></Where></Query>",
+					completefunc: function(xData, Status) {
+		                $(xData.responseXML).SPFilterNode("z:row").each(function() {
+		                	totalMoney = $(this).attr("ows_Request_Amount");
+		                	totalMoney = totalMoney.slice(1, totalMoney.length);
+		                	totalMoney = parseFloat(totalMoney);
+		                	totalMoney = newFileMny + totalMoney;
+		                });
+		            }
+		        }).done(function() {
+					$().SPServices({
+						operation: "UpdateListItems",
+						batchCmd: "Update",
+						webURL: globalVars.webUrl(),
+						listName: globalVars.listName(),
+						ID: globalVars.currID(),
+						async: false,
+						valuepairs: [["Request_Amount", totalMoney]],
+						completefunc: null		
+					}).done(function() {
+						console.log("Total amount successfully updated for list item: " + globalVars.currID())
+						dfd.resolve();
+					}).fail(function() {
+						dfd.reject("Couldn't update the total amount for list item: " + globalVars.currID());
+					});	        
+		        }).fail(function() {
+		        	dfd.reject("Couldn't connect to the list to find the total amount for list item: " + globalVars.currID());
+		        });			
+			}).promise();		
+		}
+		
+		/**
+		 * gets the event data to populate the table
+		 * @public
+		 * @param {string} camlQuery - filters based on the decision made on the event
+		 * @returns {Promise}
+		 */
+		function getListItems(camlQuery) {		
+			var offices = globalVars.getOffices();
+			return $.Deferred(function(dfd) {
+				$().SPServices({
+		            operation: "GetListItems",
+		            async: false,
+					webURL: globalVars.webUrl(),
+					listName: globalVars.listName(),
+		            CAMLViewFields: "<ViewFields>" +
+		                "<FieldRef Name='Name' />" +
+		                "<FieldRef Name='Event_Name' />" +
+		                "<FieldRef Name='Event_Location' />" +
+		                "<FieldRef Name='Start_Time' />" +
+		                "<FieldRef Name='End_Time' />" +                    
+		                "<FieldRef Name='Request_Decision' />" +
+		                "<FieldRef Name='ID' />" +
+		                "<FieldRef Name='Request_Invstmt' />" +
+		                "<FieldRef Name='Request_Office' />" +
+		                "<FieldRef Name='Request_Amount' />" +
+		                "<FieldRef Name='Event_Summary' />" +
+		                "<FieldRef Name='Disapproval_Reason' />" +
+		                "<FieldRef Name='Check_Number' />" +
+		                "<FieldRef Name='Check_Amount' />" +
+		                "</ViewFields>",
+					CAMLQuery: camlQuery,
+		            completefunc: function(xData, Status) {
+		                $(xData.responseXML).SPFilterNode("z:row").each(function() {
+		                	var name = $(this).attr("ows_Name");
+		                	var eventName = $(this).attr("ows_Event_Name");
+		                	var order = new Date($(this).attr("ows_Start_Time")).getTime();
+		                	var eventLoc = $(this).attr("ows_Event_Location");
+		                	var startTime = formatDates($(this).attr("ows_Start_Time"));
+		                	var endTime = formatDates($(this).attr("ows_End_Time"));
+		                	var reqDesc = $(this).attr("ows_Request_Decision");
+		                	var itemID = $(this).attr("ows_ID");
+		                	var reqInvstmt = $(this).attr("ows_Request_Invstmt");
+		                	var reqOffice = $(this).attr("ows_Request_Office");
+		                	var reqAmt = $(this).attr("ows_Request_Amount") !== undefined ? 
+		                		Number($(this).attr("ows_Request_Amount")).toFixed(2) : "$0.00";
+		                	var eventSummary = $(this).attr("ows_Event_Summary");
+		                	var chkNum = $(this).attr("ows_Check_Number");
+		                	var chkAmt = $(this).attr("ows_Check_Amount") !== undefined ? 
+		                		"$" + Number($(this).attr("ows_Check_Amount")).toFixed(2) : "$0.00";
+		                	var disReason = typeof $(this).attr("ows_Disapproval_Reason") === 'undefined' ? 
+		                		"N/A" : $(this).attr("ows_Disapproval_Reason"); 		
+	
+		                	for (var index = 0; index < globalVars.getOffices().length; index++) {
+			               		if (offices[index] === "IRM") {
+				                	var listItem = {
+				                		ID: itemID,
+				                		user_name: name,
+				                		event_name: eventName,
+				                		event_loc: eventLoc,
+				                		start_time: startTime,
+				                		end_time: endTime,
+				                		req_desc: reqDesc,
+				                		req_invstmt: reqInvstmt,
+				                		req_office: reqOffice,
+				                		req_amount: reqAmt,
+				                		event_sum: eventSummary,
+				                		chk_num: chkNum,
+				                		chk_amt: chkAmt,
+				                		dis_reason: disReason,
+				                		order: order
+				                	};				                	
+				                	globalVars.setList(listItem);	
+				                	break;                		
+		                		} else if (reqOffice.indexOf(offices[index]) !== -1) {
+				                	var listItem = {
+				                		ID: itemID,
+				                		user_name: name,
+				                		event_name: eventName,
+				                		event_loc: eventLoc,
+				                		start_time: startTime,
+				                		end_time: endTime,
+				                		req_desc: reqDesc,
+				                		req_invstmt: reqInvstmt,
+				                		req_office: reqOffice,
+				                		req_amount: reqAmt,
+				                		event_sum: eventSummary,
+				                		chk_num: chkNum,
+				                		chk_amt: chkAmt,
+				                		dis_reason: disReason,
+				                		order: order
+				                	};				                	
+				                	globalVars.setList(listItem);		                			
+		                		}
+		                	}	                	               	
+		                });
+		            }
+		        }).done(function() {
+		        	globalVars.order();
+		        	console.log("Table data successfully retrieved and ordered!");
+					dfd.resolve();		        
+		        }).fail(function() {
+		        	dfd.reject("Table data from " + globalVars.listName() + " couldn't be retrieved...\nCheck the CAMLQuery.");
+		        });				
+			}).promise();		
+		}
+		
+		/**
+		 * This function grabs the receipt information for a chosen event
+		 * @public
+		 * @param {string} btnID - the ID of the event that the user clicked on	
+		 * @returns {Promise}
+		 */
+		function getReceiptData(btnID) {
+			return $.Deferred(function(dfd) {
+				$().SPServices({
+					async: false,
+					operation: "GetListItems",
+					webURL: globalVars.webUrl(),
+					listName: globalVars.listName(),
+					CAMLQuery: "<Query><Where><Eq><FieldRef Name='ID'/><Value Type='Text'>"+btnID+"</Value></Eq></Where></Query>",
+	                CAMLViewFields: "<ViewFields>" +
+	                    "<FieldRef Name='Request_Amount' />" +
+	                    "<FieldRef Name='Check_Number' />" +
+						"<FieldRef Name='Start_Time' />" +
+	                    "<FieldRef Name='Event_Name' />" +
+	                    "</ViewFields>",
+					completefunc: function(xData, Status){
+						$(xData.responseXML).SPFilterNode("z:row").each(function(){
+							var receiptData = {
+								eventName: $(this).attr("ows_Event_Name"),
+								startTime: $(this).attr("ows_Start_Time"),
+								reqAmt: $(this).attr("ows_Request_Amount"),
+								chkNum: $(this).attr("ows_Check_Number")
+							};
+							globalVars.setReceipt(receiptData);
+						});
+					}
+				}).done(function() {
+					console.log("Receipt data for event " + eventName + " was found!");
+					dfd.resolve();				
+				}).fail(function() {
+					dfd.reject("The receipt data for event " + eventName + " was not found...\nPlease check " + globalVars.listName());
+				});			
+			}).promise();
+		}
+
+		/**
+		 * This function shows the files for an event within the popup modal
+		 * @public
+		 * @param {string} fileURL - the string of where the file is located
+		 * @param {string} reqAmount - how much is being requested for an event
+		 * @param {string} fileType - whether the file type is an expense item, or a guest list
+		 * @param {string} btnID - the ID of the event the the user clicked on 		
+		 */		
+        function showFiles(fileURL, reqAmount, fileType, btnID) {
+        	var $list;
+        	var fileHome = "http://irm.m.state.sbu/sites/bmp/SPO/FMD/AMS/ORF_Document_Library/";
+        	var decimalAmt = ".00";
+            
+            var file = document.createElement('input');
+            file.style.borderRadius = "5px";
+            file.value = fileURL;
+            file.style.borderRadius = "5px";
+            file.className = "file-name-adm";
+            file.setAttribute('type', 'text');
+            file.readOnly = true;
+            var $file = $(file);
+                        
+            var download = document.createElement('button');
+            download.style.borderRadius = "5px";
+            download.id = "download-" + globalVars.count();
+            download.innerHTML = "Download";
+            download.title = "Click to download";
+            download.setAttribute('type', 'button');
+            
+            var $dwnld = $(download);
+            
+			$dwnld.on('click', function() {
+				window.open(fileHome + fileURL);
+			});
+           
+            var li = document.createElement('li');
+            var $li = $(li);
+
+        	switch (fileType) {
+        		case "Guest List":
+        			$list = $('#guestFilesList');
+        			download.className = "gstDwnldBtn";
+        			$li.append($file);
+        			$li.append($dwnld);
+        			break;
+        		case "Expense Item":
+         			download.className = "dwnldBtn";       			
+        		  	var money;
+        			$list = $('#expFilesList');
+        			money = parseFloat(reqAmount).toFixed(2);
+		            var amtBox = document.createElement('input');
+		            amtBox.style.borderRadius = "5px";
+		            amtBox.className = "money-spacing";
+		            amtBox.id = "amtBox-" + globalVars.count();
+		            
+					var strAmt = String(money);
+					var hasDecimal = strAmt.indexOf('.') === -1 ? 0 : 2;					
+					var mnyLength = strAmt.length;
+											            
+					if (hasDecimal !== 0) {
+						decimalAmt = String(money).slice((mnyLength-hasDecimal), mnyLength);							
+						if (decimalAmt.indexOf('.') === -1) {
+							decimalAmt = '.' + decimalAmt;
+						} else {
+							decimalAmt += '0';
+						}						
+					}
+								
+					if (strAmt.slice(0, (mnyLength-hasDecimal)).indexOf('.') !== -1) {
+						hasDecimal++;
+					}
+					
+					switch ((mnyLength-hasDecimal)) {
+						case 4:
+							strAmt = strAmt.slice(0,1) + ',' + strAmt.slice(1,mnyLength-hasDecimal);
+							break;
+						case 5:
+							strAmt = strAmt.slice(0,2) + ',' + strAmt.slice(2,mnyLength-hasDecimal);
+							break;
+						case 6:
+						case 7:
+							strAmt = strAmt.slice(0,3) + ',' + strAmt.slice(3,mnyLength-hasDecimal);
+							break;					
+						default: decimalAmt = "";
+							break;
+					}
+									            
+		            amtBox.value = "$" + strAmt + decimalAmt;
+		            amtBox.setAttribute('type', 'text');
+		            var $amtBox = $(amtBox);
+		            $li.append($dwnld);
+		            $li.append($file);
+		            $li.append($dwnld);
+		            $li.append($amtBox);
+		            $amtBox.on('change', function() {
+		            	var $input = $(this).val();
+		            	var $ID = $(this).attr('id');
+		            	var validMoney = validateMoney($ID, $input);
+		            	if (validMoney) {          	
+			            	updateTotalRqstAmt();
+			            	updateListItem(file.value, $input);
+		            	}
+		            });
+        			break;
+        		default:
+        			break;
+        	}
+        	
+            $list.append($li);
+            globalVars.increment();
+            return;
+        }
+
+		/**
+		 * This function retrieves relevant documents for an
+		 * event based on the ID of the button the user clicked
+		 * @public
+		 * @param {string} btnID - the ID of the event the user clicked on
+		 * @returns {Promise}
+		 */
+		function getDocs(btnID) {
+			return $.Deferred(function(dfd) {
+		        $().SPServices({
+		        	operation: "GetListItems",
+		        	async: false,
+		        	webURL: globalVars.webUrl(),
+		        	listName: globalVars.libName(),
+		            CAMLViewFields: "<ViewFields>" +
+		                "<FieldRef Name='LinkFilenameNoMenu' />" +
+		                "<FieldRef Name='FileLeafRef' />" + 
+		                "<FieldRef Name='Amount' />" +
+		                "<FieldRef Name='File_Type' />" +     
+		                "</ViewFields>",
+					CAMLQuery: "<Query><Where><Eq><FieldRef Name='Doc_ID'/><Value Type='Text'>"+btnID+"</Value></Eq></Where></Query>",
+					completefunc: function(xData, Status){
+						$(xData.responseXML).SPFilterNode("z:row").each(function(){						
+							var fileURL = $(this).attr("ows_FileLeafRef").split(";#")[1];
+							var reqAmount = $(this).attr("ows_Amount");
+							var fileType = $(this).attr("ows_File_Type");
+							
+							showFiles(fileURL, reqAmount, fileType, btnID);
+						});
+					}			
+		        }).done(function() {
+		        	console.log("Documents for list item: " + btnID + " have been retrieved!");
+		        	dfd.resolve();
+		        }).fail(function() {
+		        	dfd.reject("Documents for list item: " + btnID + " couldn't be retrieved...\nCheck the web URL.");
+		        });			
+			}).promise();	        
+		}
+		
+        /** 
+         * Does the initial formatting for the total amount being asked for by the user
+         * @public
+         * @param {number} index - the index where the requested amount is in the list array
+         * @returns {string} - the formatted total amount 
+         */
+        function initTotalAmt(index) {
+        	var totalAmt = String(Number(globalVars.list()[index].req_amount));
+			var hasDecimal = totalAmt.indexOf('.') === -1 ? 0 : 2;
+			var mnyLength = totalAmt.length;
+			var decimalAmt = ".00";
+			
+			if (hasDecimal !== 0) {			
+				decimalAmt = totalAmt.slice((mnyLength-hasDecimal), (mnyLength)); //-2
+				if (decimalAmt.indexOf('.') === -1) {
+					decimalAmt = '.' + decimalAmt;
+				} else {
+					decimalAmt += '0';
+				}
+			}
+						
+			if (totalAmt.slice(0, (mnyLength-hasDecimal)).indexOf('.') !== -1) {
+				hasDecimal++;
+			}
+						
+			switch ((mnyLength-hasDecimal)) {
+				case 4:
+					totalAmt = totalAmt.slice(0,1) + ',' + totalAmt.slice(1,mnyLength-hasDecimal) + decimalAmt;
+					break;
+				case 5:
+					totalAmt = totalAmt.slice(0,2) + ',' + totalAmt.slice(2,mnyLength-hasDecimal) + decimalAmt;
+					break;
+				case 6:
+				case 7:
+					totalAmt = totalAmt.slice(0,3) + ',' + totalAmt.slice(3,mnyLength-hasDecimal) + decimalAmt;
+					break;						
+			}        	
+        	return ("$" + totalAmt);
+        }
+		
+		/** 
+		 * Initiates the editing for an event
+		 * @public
+		 * @param {string} btnID - the ID of the event that the user clicked on 
+		 */		
+		function initEdit(btnID) {
+			getDocs(btnID);
+			var arrayLth = globalVars.list().length;
+			for (var index = 0; index < arrayLth; index++) {
+				if (btnID === globalVars.list()[index].ID) {
+					globalVars.setCurrID(btnID);
+					document.getElementById('name').value = globalVars.list()[index].user_name;
+					document.getElementById('eventName').value = globalVars.list()[index].event_name;
+					document.getElementById('eventLoc').value = globalVars.list()[index].event_loc;
+					document.getElementById('startDateTime').value = globalVars.list()[index].start_time;
+					document.getElementById('endDateTime').value = globalVars.list()[index].end_time;
+					document.getElementById('requestInvstmt').value = globalVars.list()[index].req_invstmt;
+					document.getElementById('requestOffice').value = globalVars.list()[index].req_office;
+					document.getElementById('totalRqstAmt').value = initTotalAmt(index);
+					document.getElementById('eventSummary').value = globalVars.list()[index].event_sum;
+					document.getElementById('check_number').value = globalVars.list()[index].chk_num;
+					document.getElementById('check_amount').value = globalVars.list()[index].chk_amt;
+					document.getElementById('status').value = globalVars.list()[index].req_desc;
+					switch (globalVars.list()[index].req_desc) {
+						case "Request Approved": 
+							document.getElementById('approveReject').style.display = "block";
+							getReceiptData(btnID);
+							document.getElementById('receiptDiv').style.display = "block";
+							break;							
+						case "Request Denied":
+							document.getElementById('rejectDecision').style.display = "block";
+							document.getElementById('reject_reason').value = globalVars.list()[index].reject_rsn;
+							document.getElementById('chkInfo').style.display = "none";
+							document.getElementById('check_number').value = "$0.00";
+							document.getElementById('approveReject').style.display = "block";
+							document.getElementById('check_amount').value = "";
+							break;
+						default:
+							document.getElementById('approveReject').style.display = "block";
+							break;							
+					}					
+					break;
+				}
+			}
+			document.getElementById('modal-cntnr').style.display = 'block';
+			return;	
+		}
+		
+		/**
+		 * shows a message if no other events have been submitted
+		 * @public		
+		 */
+		function chkForEvents() {
+			if (globalVars.list().length < 1) {
+				document.getElementById('no-events').style.display = "block";
+			} else {
+				document.getElementById('no-events').style.display = "none";
+			}
+			return;		
+		}
+		
+		/** 
+		 * Loads all needed modules of the application
+		 * @public
+		 * @returns {promise}
+		 */
+		function start() {
+			var setup = [
+				bindBtns(),
+				getListItems(""),
+				tablePageView(""),
+				chkGroups()
+			];
+			
+			return $.Deferred(function(dfd) {
+				$.when.apply($,setup).done(function() {
+				 	dfd.resolve("Initial items loaded...\nInitiating page...");
+				}).fail(function() {
+					dfd.reject("Couldn't load required components to the application...\nCheck the logs for more information.");
+				}); 				
+			});
+		}
+		
+		$(document).ready(function () {
+      		var currUser = $().SPServices.SPGetCurrentUser({fieldNames: ["Name"]});
+      		var userOffices = uvi.getUserOffices(currUser, false);
+      		globalVars.setOffices(userOffices);
+      		
+			start().done(function(strtMsg) {				
+				console.log(strtMsg);
+				chkForEvents();
+			}).fail(function(strtMsg) {
+				console.log(strtMsg);
+			});
+		});
+	</script>
+<!--[if gte mso 9]><xml>
+<mso:CustomDocumentProperties>
+<mso:_dlc_DocId msdt:dt="string">IRMBMP-1344-102</mso:_dlc_DocId>
+<mso:_dlc_DocIdItemGuid msdt:dt="string">9eaa7cb5-190d-4775-9f45-72725d9dfa0d</mso:_dlc_DocIdItemGuid>
+<mso:_dlc_DocIdUrl msdt:dt="string">http://irm.m.state.sbu/sites/bmp/SPO/FMD/AMS/_layouts/DocIdRedir.aspx?ID=IRMBMP-1344-102, IRMBMP-1344-102</mso:_dlc_DocIdUrl>
+</mso:CustomDocumentProperties>
+</xml><![endif]-->
+</head>
+<body>
+	<div id="waitDiv" class="waiting">
+		<div id="pageLoader" class="loader"></div>
+		<p id="errTxt"></p>
+	</div>
+	<div id="btns">
+		<input id="newReqBtn" type="button" class="btn btn-primary btn-sm" value="New ORF Requests" />
+		<input id="homeBtn" type="button" class="btn btn-primary btn-sm" value="Home" />
+		
+		<div id="filters">
+			<label for="descFilter">Filter by Decision:</label>
+			<select id="descFilter" style="border-radius: 5px;">
+				<option value="All">View All</option>
+				<option value="User Submitted">User Submitted</option>
+				<option value="Pending Approval">Pending Approval</option>
+				<option value="Request Approved">Request Approved</option>
+				<option value="Request Denied">Deny Request</option>
+			</select>
+		</div>
+	</div>	
+	<!--<div id="pageLoader" class="loader"></div>-->
+	<div id="no-access">You do not have permission to view this page. Please contact the
+		<a href="mailto:IRMSharePointSCA@state.gov?Subject=Requesting%20Access%20to%20the%20ORF%20Admin%20Page" target="_top">SPO SharePoint Team</a> to request access.		
+	</div>
+	<div id="main-content">
+		<div id="tableDiv" class="col-md-6">
+			<table class="table table-striped">
+				<thead>
+					<tr class="fonts">
+						<th class="headers">View/Edit</th>
+						<th class="headers">Requestor</th>
+						<th class="headers">Event Name</th>
+						<th class="headers">Event Location</th>
+						<th class="headers">Start Date</th>
+						<th class="headers">End Date</th>
+						<th class="headers">Request Decision</th>
+					</tr>
+				</thead>
+				<tbody id="dataTable"></tbody>
+			</table>
+			<div id="nav-btns">
+				<i id="previous" class="fa fa-arrow-left fa-3x" aria-hidden="true"></i>
+				<i id="next" class="fa fa-arrow-right fa-3x" aria-hidden="true"></i>	
+			</div>
+		</div>	
+	</div>
+    <div id="no-events">
+    	<h2>There are currently no events created</h2>
+    </div>
+	<div id="modal-cntnr" class="modal">
+		<div id="editModal" class="modal">
+			<div id="modal-container">
+				<div id="form-container-edit" class="form-wrapper">
+					<div id="form-main" class="form-main content-box">
+						<div class="span-20 prepend-top last">
+							<h1>Official Representation Funds Request Approval</h1>
+						</div>
+						<div class="prepend-1 span-6-adm boxSpacing">
+							<label for="name">Requestor</label>
+							<input id="name" style="border-radius: 5px;" type="text" readonly="readonly" class="span-6-adm" />
+						</div>
+						<div class="span-6-adm boxSpacing">
+							<label for="requestOffice">Requesting Office</label>
+							<input id="requestOffice" style="border-radius: 5px;" type="text" readonly="readonly" class="span-6-adm" />
+						</div>
+						<div class="span-6-adm boxSpacing">
+							<label for="requestInvstmt">Requesting Investment</label>
+							<input id="requestInvstmt" style="border-radius: 5px;" type="text" readonly="readonly" class="span-6-adm" />
+						</div>
+						<div class="prepend-1 span-6-adm boxSpacing">
+							<label for="eventName">Event Name</label>
+							<input id="eventName" style="border-radius: 5px;" readonly="readonly" type="text" class="span-6-adm" />
+						</div>
+						<div class="span-6-adm boxSpacing">
+							<label for="eventLoc">Event Location</label>
+							<input id="eventLoc" style="border-radius: 5px;" readonly="readonly" type="text" class="span-6-adm" />
+						</div>
+						<div class="prepend-1 span-6-adm boxSpacing">
+							<label for="startDateTime">Start Date and Time</label>
+							<input id="startDateTime" style="border-radius: 5px;" type="text" readonly="readonly" />
+						</div>
+						<div class="span-6-adm boxSpacing">
+							<label for="endDateTime">End Date and Time</label>
+							<input id="endDateTime" style="border-radius: 5px;" type="text" readonly="readonly" />
+						</div>
+						<div class="span-6-adm boxSpacing">
+							<label for="totalRqstAmt">Total Amount Requested</label>
+							<input id="totalRqstAmt" style="border-radius: 5px;" type="text" readonly="readonly" maxlength="10" />
+						</div>
+						<div class="prepend-1 span-18 append-1 last boxSpacing">
+							<label for="eventSummary">Event Summary</label>
+							<textarea id="eventSummary" style="border-radius: 5px;" readonly="readonly" class="req span-18"></textarea>
+						</div>
+						<div class="prepend-1 span-18 append-1 append-bottom last">
+		                    <label>Guest List</label>
+		                    <div id="label-cntnr">
+			                    <div id="nameHeader">
+			                    	<label>File Name</label>
+			                    </div>                 
+		                    </div>
+		                    <div id="guestList" class="custom-files-upload">
+		                        <ul id="guestFilesList"></ul>
+		                    </div>
+		                </div>
+		                <div class="prepend-1 span-18 append-1 append-bottom last">
+		                    <label>Expense Attachments</label>
+		                    <div id="label-cntnr">
+			                    <div id="nameHeader">
+			                    	<label>File Name</label>
+			                    </div>
+			                    <div id="amtHeader">
+			                    	<label>Amount Requested</label>
+			                    </div>                   
+		                    </div>
+		                    <div id="expList"class="custom-files-upload">
+		                        <ul id="expFilesList"></ul>
+		                    </div>
+		                    <input type="button" style="border-radius: 5px;" id="btnAddFile" value="Add File" />
+		                </div>			                	
+						<div id="adminOptions">
+							<div id="approveReject" class="prepend-1 span-18 append-1 append-bottom">
+								<label for="status">Select Status: </label>
+								<select id="status" style="border-radius: 5px;">
+									<option value="User Submitted">User Submitted</option>
+									<option value="Pending Approval">Pending Approval</option>
+									<option value="Request Approved">Request Approved</option>
+									<option value="Request Denied">Deny Request</option>
+								</select>					
+							</div>
+							<div id="chkReady" class="prepend-1 span-18 append-1">
+								<b>Display Check Info: </b><input type="checkbox"/>
+							</div>							
+							<div id="rejectDecision" class="prepend-1 span-18 append-1 append-bottom boxSpacing">
+								<label for="reject_reason">Reason for Disapproval: </label>
+								<textarea id="reject_reason" style="border-radius: 5px;" class="req span-18"></textarea>								
+							</div>
+							<div id="chkInfo" class="prepend-1 span-18 append-1 append-bottom boxSpacing">
+								<div id="checkNumber">
+									<label for="check_number">Check Number: </label>
+									<input id="check_number" style="border-radius: 5px;" type="text" />							
+								</div>
+								<div id="checkAmount">
+									<label for="check_amount">Check Amount: </label>
+									<input id="check_amount" style="border-radius: 5px;" type="text" placeholder="$0.00" value="$0.00" maxlength="10" />							
+								</div>
+							</div>									
+						</div>
+						<div class="span-5 prepend-5 prepend-top">
+							<button id="btnsave" style="border-radius: 5px;" type="button" class="savebtn">
+								Save
+							</button>
+						</div>
+						<div class="span-5 append-5 prepend-top append-bottom last">
+							<button id="btncancel" style="border-radius: 5px;" type="button" class="cancelbtn">
+								Cancel
+							</button>
+						</div>
+						<div id="receiptDiv" class="span-5 append-5 prepend-top append-bottom last">
+							<button id="printReceipt" style="border-radius: 5px; cursor: pointer;" type="button" class="printBtn">
+								Print Reciept
+							</button>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>		
+</body>
+</html>
